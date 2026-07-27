@@ -1,4 +1,4 @@
-from nicegui import ui
+from nicegui import app, ui
 import sys
 import os
 from urllib.request import build_opener
@@ -45,6 +45,18 @@ def map_page(lat: float, lon: float):
     ui.leaflet(center=(lat, lon), zoom=10)
     ui.link('Back to table', '/')
 
+
+app.add_static_files("/static", "static")
+
+ui.add_head_html("""
+<link rel="manifest" href="/static/manifest.json">
+
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/static/sw.js');
+}
+</script>
+""")
 
 port = int(os.environ.get("PORT", 8080))
 
