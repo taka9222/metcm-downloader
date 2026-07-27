@@ -51,7 +51,6 @@ port = int(os.environ.get("PORT", 8080))
 ui.run(
     root,
     native=True,
-    frameless=True,
     host="0.0.0.0",
     port=port,
 )
