@@ -48,11 +48,20 @@ def map_page(lat: float, lon: float):
 
 app.add_static_files("/static", "static")
 
+ui.add_head_html("""
+<link rel="manifest" href="/static/manifest.json">
+
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/static/sw.js');
+}
+</script>
+""")
+
 port = int(os.environ.get("PORT", 8080))
 
 ui.run(
     root,
-    native=True,
     host="0.0.0.0",
     port=port,
 )
