@@ -46,4 +46,10 @@ def map_page(lat: float, lon: float):
     ui.link('Back to table', '/')
 
 
-ui.run(root)
+port = int(os.environ.get("PORT", 8080))
+
+ui.run(
+    root,
+    host="0.0.0.0",
+    port=port,
+)
