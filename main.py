@@ -36,7 +36,7 @@ def table_page():
         {'名称': '矢臼別演習場', '緯度': 43.2997, '経度': 144.9873},
         {'名称': '東富士演習場', '緯度': 35.2947, '経度': 138.8536},
     ]).props('flat bordered') \
-        .on('row-click', downloader)
+        .on('row-click', lambda e: ui.navigate.to(f'/map/{e.args[1]["緯度"]}/{e.args[1]["経度"]}'))
 
 
 # lambda e: ui.navigate.to(f'/map/{e.args[1]["緯度"]}/{e.args[1]["経度"]}')
