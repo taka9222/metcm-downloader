@@ -24,13 +24,6 @@ def grib_loader():
     # grbs.read()
 
 
-def root():
-    ui.sub_pages({
-        '/': table_page,
-        '/map/{lat}/{lon}': map_page,
-    }).classes('w-full')
-
-
 def table_page():
     ui.table(rows=[
         {'名称': '矢臼別演習場', '緯度': 43.2997, '経度': 144.9873},
@@ -58,10 +51,15 @@ if ('serviceWorker' in navigator) {
 </script>
 """)
 
+ui.sub_pages({
+    '/': table_page,
+    '/map/{lat}/{lon}': map_page,
+}).classes('w-full')
+
 port = int(os.environ.get("PORT", 8080))
 
+
 ui.run(
-    root,
     host="0.0.0.0",
     port=port,
 )
