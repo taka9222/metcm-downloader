@@ -1,6 +1,6 @@
 {
-  "name": "METCM Downloader",
-  "short_name": "METCM",
+  "name": "陸上自衛隊 気象報ダウンローダー",
+  "short_name": "気象報",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#101010",
