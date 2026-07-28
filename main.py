@@ -39,22 +39,22 @@ def table_page():
     for row in rows:
         row["latlon"] = f'{row["lat"]:.1f}\n{row["lon"]:.1f}'
     columns = [
-        {"name": "code", "label": "コード", "field": "code", "style": "width:48px", "align": "left"},
+        # {"name": "code", "label": "コード", "field": "code", "style": "width:60px", "align": "left"},
         {"name": "loc", "label": "場所", "field": "loc", "align": "left"},
         {"name": "latlon", "label": "緯度経度", "field": "latlon", "style": "width:70px", "align": "left"},
         {"name": "map", "label": "", "field": "map", "style": "width:48px", "align": "left"},
+        {"name": "menu", "label": "", "field": "menu", "style": "width:48px", "align": "center"},
     ]
 
     def row_clicked(e):
         row = e.args[1]
-        ui.notify(f'選択: {row["loc"]}')
+        ui.notify(f'選択: {row["loc"]}', position="top")
         # ここに行タップ時の処理を書く
 
     def open_map(row):
         ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
 
-    table = ui.table(columns=columns, rows=rows,
-                     row_key="code").props("flat bordered").classes("w-full")
+    table = ui.table(columns=columns, rows=rows, row_key="code").props("flat bordered").classes("w-full")
     table.on("row-click", row_clicked)
 
     with table.add_slot('body-cell-latlon', r'''
@@ -73,7 +73,45 @@ def table_page():
         """):
         pass
 
+    with table.add_slot('body-cell-menu', r'''
+        <q-td :props="props" auto-width>
+        <q-btn flat round dense icon="more_vert" @click.stop="$parent.$emit('menu-click', props.row)">
+            <q-menu>
+            <q-list style="min-width:180px">
+
+                <q-item clickable v-close-popup @click="$parent.$emit('map-click', props.row)">
+                <q-item-section avatar>
+                    <q-icon name="map"/>
+                </q-item-section>
+                <q-item-section>地図を表示</q-item-section>
+                </q-item>
+
+                <q-item clickable v-close-popup @click="$parent.$emit('detail-click', props.row)">
+                <q-item-section avatar>
+                    <q-icon name="info"/>
+                </q-item-section>
+                <q-item-section>詳細</q-item-section>
+                </q-item>
+
+                <q-item clickable v-close-popup @click="$parent.$emit('favorite-click', props.row)">
+                <q-item-section avatar>
+                    <q-icon name="star"/>
+                </q-item-section>
+                <q-item-section>お気に入り</q-item-section>
+                </q-item>
+
+            </q-list>
+            </q-menu>
+        </q-btn>
+
+        </q-td>
+        '''):
+        pass
+
     table.on("map-click", lambda e: open_map(e.args))
+    table.on("menu-click", None)
+    table.on("detail-click", lambda e: ui.notify(f'詳細: {e.args["loc"]}', position="top"))
+    table.on("favorite-click", lambda e: ui.notify(f'お気に入り: {e.args["loc"]}', position="top"))
     floating_nav("table")
 
 
