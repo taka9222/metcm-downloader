@@ -2,7 +2,7 @@ from nicegui import app, ui
 import sys
 import os
 from urllib.request import build_opener
-# import pygrib
+import pygrib
 
 
 def downloader():
