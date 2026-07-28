@@ -92,7 +92,7 @@ def settings_page():
         app.storage.user[DISPLAY_THEME_KEY] = e.value
         apply_display_theme(e.value)
 
-    with ui.column().classes("w-full gap-3"):
+    with ui.column():
 
         with ui.row().classes("w-full items-center"):
             ui.label("表示テーマ").classes("w-25")
@@ -100,14 +100,14 @@ def settings_page():
                 options=DISPLAY_THEMES,
                 value=app.storage.user.get(DISPLAY_THEME_KEY, "system"),
                 on_change=change_theme,
-            ).props("outlined")
+            ).props('outlined dense behavior="menu"')
 
         with ui.row().classes("w-full items-center"):
             ui.label("表示単位").classes("w-25")
             ui.select(
                 options=["m/s", "kt"],
                 value="m/s",
-            ).props("outlined")
+            ).props('outlined dense behavior="menu"')
 
     floating_nav("settings")
 
