@@ -25,71 +25,90 @@ def grib_loader():
 
 
 def table_page():
-
     rows = [
-        {"コード": "Y", "名称": "矢臼別演習場", "緯度": 43.2997, "経度": 144.9873},
-        {"コード": "K", "名称": "上富良野演習場", "緯度": 43.4230, "経度": 142.4800},
-        {"コード": "I", "名称": "岩手山演習場", "緯度": 39.8650, "経度": 140.9730},
-        {"コード": "O", "名称": "王城寺原演習場", "緯度": 38.5710, "経度": 140.8610},
-        {"コード": "E", "名称": "東富士演習場", "緯度": 35.2947, "経度": 138.8536},
-        {"コード": "N", "名称": "北富士演習場", "緯度": 35.4500, "経度": 138.8000},
-        {"コード": "A", "名称": "饗庭野演習場", "緯度": 35.3460, "経度": 136.0390},
-        {"コード": "H", "名称": "日出生台演習場", "緯度": 33.2860, "経度": 131.3990},
-        {"コード": "S", "名称": "防衛装備庁下北試験場", "緯度": 41.3050, "経度": 141.3070},
+        {"code": "Y", "loc": "矢臼別演習場", "lat": 43.2997, "lon": 144.9873},
+        {"code": "K", "loc": "上富良野演習場", "lat": 43.4230, "lon": 142.4800},
+        {"code": "I", "loc": "岩手山演習場", "lat": 39.8650, "lon": 140.9730},
+        {"code": "O", "loc": "王城寺原演習場", "lat": 38.5710, "lon": 140.8610},
+        {"code": "E", "loc": "東富士演習場", "lat": 35.2947, "lon": 138.8536},
+        {"code": "N", "loc": "北富士演習場", "lat": 35.4500, "lon": 138.8000},
+        {"code": "A", "loc": "饗庭野演習場", "lat": 35.3460, "lon": 136.0390},
+        {"code": "H", "loc": "日出生台演習場", "lat": 33.2860, "lon": 131.3990},
+        {"code": "S", "loc": "防衛装備庁下北試験場", "lat": 41.3050, "lon": 141.3070},
     ]
+    for row in rows:
+        row["latlon"] = f'{row["lat"]:.1f}\n{row["lon"]:.1f}'
     columns = [
-        {"name": "コード", "label": "コード", "field": "コード"},
-        {"name": "名称", "label": "名称", "field": "名称"},
-        {"name": "緯度", "label": "緯度", "field": "緯度"},
-        {"name": "経度", "label": "経度", "field": "経度"},
+        {"name": "code", "label": "コード", "field": "code"},
+        {"name": "loc", "label": "場所", "field": "loc"},
+        {"name": "latlon", "label": "緯度経度", "field": "latlon"},
         {"name": "map", "label": "", "field": "map"},
     ]
 
     def row_clicked(e):
         row = e.args[1]
-        ui.notify(f'選択: {row["名称"]}')
+        ui.notify(f'選択: {row["loc"]}')
         # ここに行タップ時の処理を書く
 
     def open_map(row):
-        ui.navigate.to(f'/map/{row["緯度"]}/{row["経度"]}')
+        ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
 
-    table = ui.table(
-        columns=columns,
-        rows=rows,
-        row_key="コード",
-    ).props("flat bordered")
-
+    table = ui.table(columns=columns, rows=rows,
+                     row_key="code").props("flat bordered")
     table.on("row-click", row_clicked)
 
+    with table.add_slot('body-cell-latlon', r'''
+        <q-td :props="props" style="white-space: pre-line;">
+        {{ props.value }}
+        </q-td>
+        '''):
+        pass
+
     with table.add_slot("body-cell-map", r"""
-    <q-td :props="props">
-        <q-btn
-            flat
-            round
-            dense
-            icon="map"
-            color="primary"
+        <q-td :props="props">
+            <q-btn flat round dense icon="map" color="primary"
             @click.stop="$parent.$emit('map-click', props.row)"
-        />
-    </q-td>
-    """):
+            />
+        </q-td>
+        """):
         pass
 
     table.on("map-click", lambda e: open_map(e.args))
     floating_nav("table")
 
 
-# lambda e: ui.navigate.to(f"/map/{e.args[1]["緯度"]}/{e.args[1]["経度"]}")
-
 def map_page(lat: float, lon: float):
-    ui.leaflet(center=(lat, lon), zoom=10)
-    ui.link("Back to table", "/")
+    ui.leaflet(center=(lat, lon), zoom=10).classes('h-[50vw]')
+    ui.link("演習場一覧に戻る", "/")
     floating_nav("table")
 
 
 def settings_page():
-    floating_nav("settings")
 
+    ui.label("設定").classes("text-h5")
+
+    def change_theme(e):
+        theme = e.value
+        app.storage.user["theme"] = theme
+
+        if theme == "light":
+            dark.disable()
+        elif theme == "dark":
+            dark.enable()
+        else:
+            dark.auto()
+
+    theme = app.storage.user.get("theme", "system")
+    ui.radio({
+        "system": "システム設定",
+        "light": "ライト",
+        "dark": "ダーク",
+    },
+        value=theme,
+        on_change=change_theme,
+    ).props("inline")
+
+    floating_nav("settings")
 
 
 def floating_nav(current: str):
@@ -141,6 +160,17 @@ def floating_nav(current: str):
             """)
 
 
+dark = ui.dark_mode()
+
+theme = app.storage.user.get("theme", "system")
+
+if theme == "light":
+    dark.disable()
+elif theme == "dark":
+    dark.enable()
+else:
+    dark.auto()
+
 # PWA化
 app.add_static_files("/static", "static")
 
@@ -166,4 +196,5 @@ port = int(os.environ.get("PORT", 8080))
 ui.run(
     host="0.0.0.0",
     port=port,
+    storage_secret="6d2740f2fcfc818d68a39f9d6654db89718db917f1b872e4545cf7c9b91f72e3",
 )
