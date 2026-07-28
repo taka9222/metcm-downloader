@@ -39,10 +39,13 @@ def table_page():
     for row in rows:
         row["latlon"] = f'{row["lat"]:.1f}\n{row["lon"]:.1f}'
     columns = [
-        {"name": "code", "label": "コード", "field": "code", "style": "width:60px","align": "left"},
+        {"name": "code", "label": "コード", "field": "code",
+            "style": "width:60px", "align": "left"},
         {"name": "loc", "label": "場所", "field": "loc", "align": "left"},
-        {"name": "latlon", "label": "緯度経度", "field": "latlon", "style": "width:70px","align": "left"},
-        {"name": "map", "label": "", "field": "map", "style": "width:48px","align": "left"},
+        {"name": "latlon", "label": "緯度経度", "field": "latlon",
+            "style": "width:70px", "align": "left"},
+        {"name": "map", "label": "", "field": "map",
+            "style": "width:48px", "align": "left"},
     ]
 
     def row_clicked(e):
@@ -52,7 +55,6 @@ def table_page():
 
     def open_map(row):
         ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
-
 
     table = ui.table(columns=columns, rows=rows,
                      row_key="code").props("flat bordered").classes("w-full")
@@ -79,35 +81,26 @@ def table_page():
 
 
 def map_page(lat: float, lon: float):
-    ui.leaflet(center=(lat, lon), zoom=10).classes('h-[50vw]')
-    ui.link("演習場一覧に戻る", "/")
+    ui.leaflet(center=(lat, lon), zoom=10).classes("w-full").style("height: 85vh;")
     floating_nav("table")
 
 
 def settings_page():
-
     ui.label("設定").classes("text-h5")
 
     def change_theme(e):
-        theme = e.value
-        app.storage.user["theme"] = theme
+        app.storage.user[DISPLAY_THEME_KEY] = e.value
+        apply_display_theme(e.value)
 
-        if theme == "light":
-            dark.disable()
-        elif theme == "dark":
-            dark.enable()
-        else:
-            dark.auto()
+    with ui.column().classes("w-full gap-3"):
 
-    theme = app.storage.user.get("theme", "system")
-    ui.radio({
-        "system": "システム設定",
-        "light": "ライト",
-        "dark": "ダーク",
-    },
-        value=theme,
-        on_change=change_theme,
-    ).props("inline")
+        with ui.row().classes("w-full items-center"):
+            ui.label("表示テーマ").classes("w-40")
+            ui.select(
+                options=DISPLAY_THEMES,
+                value=app.storage.user.get(DISPLAY_THEME_KEY, "system"),
+                on_change=change_theme,
+            ).props("outlined dense").classes("flex-1")
 
     floating_nav("settings")
 
@@ -118,25 +111,7 @@ def floating_nav(current: str):
         ("settings", "設定", "/settings", "settings"),
     ]
 
-    with ui.element("div").style("""
-        position: fixed;
-        bottom: 24px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 8px;
-        padding: 8px;
-
-        background: rgba(255,255,255,.18);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,.25);
-        box-shadow: 0 8px 32px rgba(0,0,0,.25);
-
-        z-index:9999;
-    """):
+    with ui.element("div").classes("floating-nav"):
 
         for icon, label, path, name in tabs:
 
@@ -161,28 +136,128 @@ def floating_nav(current: str):
             """)
 
 
+DISPLAY_THEME_KEY = "display_theme"
+
+DISPLAY_THEMES = {
+    "system":       "システム設定",
+    "light":        "ライト",
+    "dark":         "ダーク",
+    "olive":        "オリーブドラブ",
+    "olive_dark":   "オリーブドラブ（ダーク）",
+    "jsdf":         "陸上自衛隊迷彩",
+}
+
 dark = ui.dark_mode()
 
-theme = app.storage.user.get("theme", "system")
+BODY_CLASSES = [
+    "theme-default",
+    "theme-olive",
+    "theme-olive-dark",
+    "theme-jsdf",
+]
 
-if theme == "light":
-    dark.disable()
-elif theme == "dark":
-    dark.enable()
-else:
-    dark.auto()
+
+def apply_display_theme(theme: str):
+
+    # bodyクラスをリセット
+    ui.query("body").classes(remove=" ".join(BODY_CLASSES))
+
+    match theme:
+
+        # -------------------------
+        case "system":
+
+            dark.auto()
+
+            ui.colors(
+                primary="#1976D2",
+                secondary="#42A5F5",
+                accent="#2196F3",
+            )
+
+            ui.query("body").classes(add="theme-default")
+
+        # -------------------------
+        case "light":
+
+            dark.disable()
+
+            ui.colors(
+                primary="#1976D2",
+                secondary="#42A5F5",
+                accent="#2196F3",
+            )
+
+            ui.query("body").classes(add="theme-default")
+
+        # -------------------------
+        case "dark":
+
+            dark.enable()
+
+            ui.colors(
+                primary="#64B5F6",
+                secondary="#42A5F5",
+                accent="#90CAF9",
+            )
+
+            ui.query("body").classes(add="theme-default")
+
+        # -------------------------
+        case "olive":
+
+            dark.enable()
+
+            ui.colors(
+                primary="#687A34",
+                secondary="#81944A",
+                accent="#A3B96A",
+            )
+
+            ui.query("body").classes(add="theme-olive")
+
+        # -------------------------
+        case "olive_dark":
+
+            dark.enable()
+
+            ui.colors(
+                primary="#80944A",
+                secondary="#94AA58",
+                accent="#B5CC77",
+            )
+
+            ui.query("body").classes(add="theme-olive-dark")
+
+        # -------------------------
+        case "jsdf":
+
+            dark.enable()
+
+            ui.colors(
+                primary="#78864A",
+                secondary="#A29363",
+                accent="#C9B979",
+            )
+
+            ui.query("body").classes(add="theme-jsdf")
+
+
+theme = app.storage.user.get(DISPLAY_THEME_KEY, "system")
+
+apply_display_theme(theme)
 
 # PWA化
 app.add_static_files("/static", "static")
 
 ui.add_head_html("""
-<link rel="manifest" href="/static/manifest.json">
-
-<script>
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/static/sw.js");
-}
-</script>
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <link rel="manifest" href="/static/manifest.json">
+    <script>
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/static/sw.js");
+    }
+    </script>
 """)
 
 ui.sub_pages({
@@ -192,7 +267,6 @@ ui.sub_pages({
 }).classes("w-full")
 
 port = int(os.environ.get("PORT", 8080))
-
 
 ui.run(
     host="0.0.0.0",
