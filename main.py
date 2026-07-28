@@ -102,6 +102,13 @@ def settings_page():
                 on_change=change_theme,
             ).props("outlined dense").classes("flex-1")
 
+        with ui.row().classes("w-full items-center"):
+            ui.label("表示単位").classes("w-40")
+            ui.select(
+                options=["m/s", "kt"],
+                value="m/s",
+            ).props("outlined dense").classes("flex-1")
+
     floating_nav("settings")
 
 
