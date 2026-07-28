@@ -81,7 +81,7 @@ def table_page():
 
 
 def map_page(lat: float, lon: float):
-    ui.leaflet(center=(lat, lon), zoom=10).classes("w-full").style("height: 85vh;")
+    ui.leaflet(center=(lat, lon), zoom=10).classes("w-full").style("height: 80vh;")
     floating_nav("table")
 
 
@@ -92,15 +92,35 @@ def settings_page():
         app.storage.user[DISPLAY_THEME_KEY] = e.value
         apply_display_theme(e.value)
 
-    with ui.column().classes("w-full gap-3"):
+    with ui.grid(columns="180px auto").classes("w-full gap-3 items-center"):
 
-        with ui.row().classes("w-full items-center"):
-            ui.label("表示テーマ").classes("w-40")
-            ui.select(
-                options=DISPLAY_THEMES,
-                value=app.storage.user.get(DISPLAY_THEME_KEY, "system"),
-                on_change=change_theme,
-            ).props("outlined dense").classes("flex-1")
+        ui.label("表示テーマ")
+
+        ui.select(
+            options=DISPLAY_THEMES,
+            value=app.storage.user.get(DISPLAY_THEME_KEY, "system"),
+            on_change=change_theme,
+        ).props("outlined dense").classes("w-full")
+
+        ui.label("風速単位")
+
+        ui.select(
+            options={
+                "m/s": "m/s",
+                "kt": "kt",
+            },
+            value="m/s",
+        ).props("outlined dense").classes("w-full")
+
+        ui.label("地図の種類")
+
+        ui.select(
+            options={
+                "osm": "OpenStreetMap",
+                "sat": "衛星画像",
+            },
+            value="osm",
+        ).props("outlined dense").classes("w-full")
 
     floating_nav("settings")
 
