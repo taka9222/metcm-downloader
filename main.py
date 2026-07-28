@@ -95,19 +95,19 @@ def settings_page():
     with ui.column().classes("w-full gap-3"):
 
         with ui.row().classes("w-full items-center"):
-            ui.label("表示テーマ").classes("w-40")
+            ui.label("表示テーマ").classes("w-30")
             ui.select(
                 options=DISPLAY_THEMES,
                 value=app.storage.user.get(DISPLAY_THEME_KEY, "system"),
                 on_change=change_theme,
-            ).props("outlined dense").classes("flex-1")
+            ).props("outlined dense")
 
         with ui.row().classes("w-full items-center"):
-            ui.label("表示単位").classes("w-40")
+            ui.label("表示単位").classes("w-30")
             ui.select(
                 options=["m/s", "kt"],
                 value="m/s",
-            ).props("outlined dense").classes("flex-1")
+            ).props("outlined dense")
 
     floating_nav("settings")
 
