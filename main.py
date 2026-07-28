@@ -66,7 +66,7 @@ def table_page():
     with table.add_slot('body-cell-menu', r'''
         <q-td :props="props" auto-width>
         <q-btn flat round dense icon="more_vert" @click.stop="$parent.$emit('menu-click', props.row)">
-            <q-menu class="glass-menu">
+            <q-menu class="glass-menu" :offset="[0, -24]" >
             <q-list style="min-width:180px">
 
                 <q-item clickable v-close-popup @click="$parent.$emit('map-click', props.row)">
