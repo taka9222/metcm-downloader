@@ -39,10 +39,10 @@ def table_page():
     for row in rows:
         row["latlon"] = f'{row["lat"]:.1f}\n{row["lon"]:.1f}'
     columns = [
-        {"name": "code", "label": "コード", "field": "code"},
-        {"name": "loc", "label": "場所", "field": "loc"},
-        {"name": "latlon", "label": "緯度経度", "field": "latlon"},
-        {"name": "map", "label": "", "field": "map"},
+        {"name": "code", "label": "コード", "field": "code", "style": "width:60px","align": "left"},
+        {"name": "loc", "label": "場所", "field": "loc", "align": "left"},
+        {"name": "latlon", "label": "緯度経度", "field": "latlon", "style": "width:70px","align": "left"},
+        {"name": "map", "label": "", "field": "map", "style": "width:48px","align": "left"},
     ]
 
     def row_clicked(e):
@@ -53,8 +53,9 @@ def table_page():
     def open_map(row):
         ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
 
+
     table = ui.table(columns=columns, rows=rows,
-                     row_key="code").props("flat bordered")
+                     row_key="code").props("flat bordered").classes("w-full")
     table.on("row-click", row_clicked)
 
     with table.add_slot('body-cell-latlon', r'''
