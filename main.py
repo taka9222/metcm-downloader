@@ -4,24 +4,10 @@ import os
 from urllib.request import build_opener
 import pygrib
 
-
-def downloader():
-    opener = build_opener()
-    file = "https://osdf-director.osg-htc.org/ncar/gdex/d083002/grib2/2026/2026.07/fnl_20260727_00_00.grib2"
-    ofile = os.path.basename(file)
-    sys.stdout.write("downloading " + ofile + " ... ")
-    sys.stdout.flush()
-    infile = opener.open(file)
-    outfile = open(ofile, "wb")
-    outfile.write(infile.read())
-    outfile.close()
-    sys.stdout.write("done\n")
-
-
-def grib_loader():
-    pass
-    # grbs = pygrib.open("2026.07/fnl_20260727_00_00.grib2")
-    # grbs.read()
+# from components.uicolors import apply_display_theme
+from components.navbar import floating_nav
+from services.fnl_fetcher import get_latest_fnl
+from components.dialog import dialog_latest_weather
 
 
 def table_page():
@@ -45,10 +31,8 @@ def table_page():
         {"name": "menu", "label": "", "field": "menu", "style": "width:48px", "align": "center"},
     ]
 
-    def row_clicked(e):
-        row = e.args[1]
-        ui.notify(f'選択: {row["loc"]}', position="top")
-        # ここに行タップ時の処理を書く
+    async def row_clicked(e):
+        await dialog_latest_weather()
 
     def open_map(row):
         ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
@@ -137,49 +121,16 @@ def settings_page():
     floating_nav("settings")
 
 
-def floating_nav(current: str):
-    tabs = [
-        ("table_chart", "一覧", "/", "table"),
-        ("settings", "設定", "/settings", "settings"),
-    ]
-
-    with ui.element("div").classes("floating-nav"):
-
-        for icon, label, path, name in tabs:
-
-            active = (current == name)
-
-            ui.button(
-                label if active else "",
-                icon=icon,
-                on_click=lambda p=path: ui.navigate.to(p),
-            ).props(
-                "unelevated no-caps rounded" if active else "flat round"
-            ).style(f"""
-                width: {'120px' if active else '48px'};
-                height:48px;
-                border-radius:999px;
-
-                transition:
-
-                    all .25s cubic-bezier(.2,.8,.2,1);
-
-                {'background:rgba(255,255,255,.35);' if active else ''}
-            """)
-
-
 DISPLAY_THEME_KEY = "display_theme"
 
 DISPLAY_THEMES = {
-    "system":       "システム設定",
-    "light":        "ライト",
-    "dark":         "ダーク",
-    "olive":        "オリーブドラブ",
-    "olive_dark":   "オリーブドラブ（ダーク）",
-    "jsdf":         "陸上自衛隊迷彩",
+    "system": "システム設定",
+    "light": "ライト",
+    "dark": "ダーク",
+    "olive": "オリーブドラブ",
+    "olive_dark": "オリーブドラブ（ダーク）",
+    "jsdf": "陸上自衛隊迷彩",
 }
-
-dark = ui.dark_mode()
 
 BODY_CLASSES = [
     "theme-default",
@@ -188,95 +139,68 @@ BODY_CLASSES = [
     "theme-jsdf",
 ]
 
+dark = ui.dark_mode()
 
 def apply_display_theme(theme: str):
-
     # bodyクラスをリセット
     ui.query("body").classes(remove=" ".join(BODY_CLASSES))
 
     match theme:
-
-        # -------------------------
         case "system":
-
             dark.auto()
-
             ui.colors(
                 primary="#1976D2",
                 secondary="#42A5F5",
                 accent="#2196F3",
             )
-
             ui.query("body").classes(add="theme-default")
 
-        # -------------------------
         case "light":
-
             dark.disable()
-
             ui.colors(
                 primary="#1976D2",
                 secondary="#42A5F5",
                 accent="#2196F3",
             )
-
             ui.query("body").classes(add="theme-default")
 
-        # -------------------------
         case "dark":
-
             dark.enable()
-
             ui.colors(
                 primary="#64B5F6",
                 secondary="#42A5F5",
                 accent="#90CAF9",
             )
-
             ui.query("body").classes(add="theme-default")
 
-        # -------------------------
         case "olive":
-
             dark.enable()
-
             ui.colors(
                 primary="#687A34",
                 secondary="#81944A",
                 accent="#A3B96A",
             )
-
             ui.query("body").classes(add="theme-olive")
 
-        # -------------------------
         case "olive_dark":
-
             dark.enable()
-
             ui.colors(
                 primary="#80944A",
                 secondary="#94AA58",
                 accent="#B5CC77",
             )
-
             ui.query("body").classes(add="theme-olive-dark")
 
-        # -------------------------
         case "jsdf":
-
             dark.enable()
-
             ui.colors(
                 primary="#78864A",
                 secondary="#A29363",
                 accent="#C9B979",
             )
-
             ui.query("body").classes(add="theme-jsdf")
 
-
 theme = app.storage.user.get(DISPLAY_THEME_KEY, "system")
-
 apply_display_theme(theme)
 
 # PWA化
@@ -284,6 +208,7 @@ app.add_static_files("/static", "static")
 
 ui.add_head_html("""
     <link rel="stylesheet" href="/static/css/theme.css">
+    <link rel="stylesheet" href="/static/css/style.css">
     <link rel="manifest" href="/static/manifest.json">
     <script>
     if ("serviceWorker" in navigator) {
