@@ -42,7 +42,6 @@ def table_page():
         # {"name": "code", "label": "コード", "field": "code", "style": "width:60px", "align": "left"},
         {"name": "loc", "label": "場所", "field": "loc", "align": "left"},
         {"name": "latlon", "label": "緯度経度", "field": "latlon", "style": "width:70px", "align": "left"},
-        {"name": "map", "label": "", "field": "map", "style": "width:48px", "align": "left"},
         {"name": "menu", "label": "", "field": "menu", "style": "width:48px", "align": "center"},
     ]
 
@@ -64,24 +63,15 @@ def table_page():
         '''):
         pass
 
-    with table.add_slot("body-cell-map", r"""
-        <q-td :props="props">
-            <q-btn flat round dense icon="map" color="primary"
-            @click.stop="$parent.$emit('map-click', props.row)"
-            />
-        </q-td>
-        """):
-        pass
-
     with table.add_slot('body-cell-menu', r'''
         <q-td :props="props" auto-width>
         <q-btn flat round dense icon="more_vert" @click.stop="$parent.$emit('menu-click', props.row)">
-            <q-menu>
+            <q-menu class="glass-menu">
             <q-list style="min-width:180px">
 
                 <q-item clickable v-close-popup @click="$parent.$emit('map-click', props.row)">
                 <q-item-section avatar>
-                    <q-icon name="map"/>
+                    <q-icon name="place"/>
                 </q-item-section>
                 <q-item-section>地図を表示</q-item-section>
                 </q-item>
