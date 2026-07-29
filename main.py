@@ -10,156 +10,162 @@ from components.colors import UI_COLORS
 
  
 def home_page():
-    ui.label("ホーム").classes("text-h5")
-    ui.label("プロトタイプ UI")
+    with ui.column().classes("w-full px-4").style(
+        "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
+    ):
+        ui.label("ホーム").classes("text-h5")
+        ui.label("プロトタイプ UI")
 
-    ui.label("直近に使用した演習場").classes("text-subtitle1 q-mt-md")
+        ui.label("直近に使用した演習場").classes("text-subtitle1 q-mt-md")
 
-    with ui.card().classes("w-full"):
-        with ui.row().classes("items-center justify-between w-full"):
+        with ui.card().classes("w-full"):
+            with ui.row().classes("items-center justify-between w-full"):
 
-            with ui.column().classes("gap-0"):
-                ui.label("矢臼別演習場").classes("text-h6")
-                ui.label("北海道").classes("text-caption text-grey-6")
-                ui.label("43.2997 144.9873").classes("text-caption text-grey-6")
+                with ui.column().classes("gap-0"):
+                    ui.label("矢臼別演習場").classes("text-h6")
+                    ui.label("北海道").classes("text-caption text-grey-6")
+                    ui.label("43.2997 144.9873").classes("text-caption text-grey-6")
 
-            ui.icon("location_on").classes("text-3xl text-grey-6")
+                ui.icon("location_on").classes("text-3xl text-grey-6")
 
-        ui.separator().classes("q-my-sm")
+            ui.separator().classes("q-my-sm")
 
-        with ui.row().classes("w-full justify-end"):
-            ui.button(
-                "演習場一覧",
-                icon="list",
-                on_click=lambda: ui.navigate.to("/table"),
-            ).props("flat")
+            with ui.row().classes("w-full justify-end"):
+                ui.button(
+                    "演習場一覧",
+                    icon="list",
+                    on_click=lambda: ui.navigate.to("/table"),
+                ).props("flat")
 
-    ui.label("最新の気象情報").classes("text-subtitle1 q-mt-lg")
+        ui.label("最新の気象情報").classes("text-subtitle1 q-mt-lg")
 
-    with ui.card().classes("w-full"):
+        with ui.card().classes("w-full"):
 
-        with ui.row().classes("items-center justify-between w-full"):
-            with ui.column().classes("gap-0"):
-                ui.label("○○演習場").classes("text-h6")
-                ui.label("最新データ").classes("text-caption text-grey-6")
+            with ui.row().classes("items-center justify-between w-full"):
+                with ui.column().classes("gap-0"):
+                    ui.label("○○演習場").classes("text-h6")
+                    ui.label("最新データ").classes("text-caption text-grey-6")
 
-            ui.icon("cloud").classes("text-3xl text-grey-6")
+                ui.icon("cloud").classes("text-3xl text-grey-6")
 
-        ui.separator().classes("q-my-sm")
+            ui.separator().classes("q-my-sm")
 
-        with ui.row().classes("w-full"):
+            with ui.row().classes("w-full"):
 
-            with ui.column().classes("flex-1 items-center"):
-                ui.label("気温").classes("text-caption text-grey-6")
-                ui.label("25.4 °C").classes("text-body1")
+                with ui.column().classes("flex-1 items-center"):
+                    ui.label("気温").classes("text-caption text-grey-6")
+                    ui.label("25.4 °C").classes("text-body1")
 
-            with ui.column().classes("flex-1 items-center"):
-                ui.label("風速").classes("text-caption text-grey-6")
-                ui.label("4.8 m/s").classes("text-body1")
+                with ui.column().classes("flex-1 items-center"):
+                    ui.label("風速").classes("text-caption text-grey-6")
+                    ui.label("4.8 m/s").classes("text-body1")
 
-            with ui.column().classes("flex-1 items-center"):
-                ui.label("湿度").classes("text-caption text-grey-6")
-                ui.label("76 %").classes("text-body1")
+                with ui.column().classes("flex-1 items-center"):
+                    ui.label("湿度").classes("text-caption text-grey-6")
+                    ui.label("76 %").classes("text-body1")
 
-        ui.button("最新データを取得", icon="refresh", on_click=dialog_latest_weather,
-        ).props("unelevated").classes("w-full q-mt-md")
+            ui.button("最新データを取得", icon="refresh", on_click=dialog_latest_weather,
+            ).props("unelevated").classes("w-full q-mt-md")
 
-    ui.label("高度別の気象データ").classes("text-subtitle1 q-mt-lg")
+        ui.label("高度別の気象データ").classes("text-subtitle1 q-mt-lg")
 
-    with ui.card().classes("w-full"):
+        with ui.card().classes("w-full"):
 
-        ui.label("高度を選択して気象状態を確認できます。").classes("text-body2")
+            ui.label("高度を選択して気象状態を確認できます。").classes("text-body2")
 
-        with ui.row().classes("items-center w-full q-mt-sm"):
+            with ui.row().classes("items-center w-full q-mt-sm"):
 
-            ui.select(
-                [0, 500, 1000, 1500, 2000, 3000, 5000], value=1000, label="高度",
-            ).classes("flex-1")
+                ui.select(
+                    [0, 500, 1000, 1500, 2000, 3000, 5000], value=1000, label="高度",
+                ).classes("flex-1")
 
-            ui.label("m").classes("q-ml-sm")
+                ui.label("m").classes("q-ml-sm")
 
-        ui.button("気象データを表示", icon="analytics").props("flat").classes("w-full q-mt-sm")
+            ui.button("気象データを表示", icon="analytics").props("flat").classes("w-full q-mt-sm")
 
     floating_nav("home")
 
 
 def table_page():
-    ui.label("演習場一覧").classes("text-h5")
-    rows = [
-        {"code": "Y", "loc": "矢臼別演習場", "lat": 43.2997, "lon": 144.9873},
-        {"code": "K", "loc": "上富良野演習場", "lat": 43.4230, "lon": 142.4800},
-        {"code": "I", "loc": "岩手山演習場", "lat": 39.8650, "lon": 140.9730},
-        {"code": "O", "loc": "王城寺原演習場", "lat": 38.5710, "lon": 140.8610},
-        {"code": "E", "loc": "東富士演習場", "lat": 35.2947, "lon": 138.8536},
-        {"code": "N", "loc": "北富士演習場", "lat": 35.4500, "lon": 138.8000},
-        {"code": "A", "loc": "饗庭野演習場", "lat": 35.3460, "lon": 136.0390},
-        {"code": "H", "loc": "日出生台演習場", "lat": 33.2860, "lon": 131.3990},
-        {"code": "S", "loc": "防衛装備庁下北試験場", "lat": 41.3050, "lon": 141.3070},
-    ]
-    for row in rows:
-        row["latlon"] = f'{row["lat"]:.1f}\n{row["lon"]:.1f}'
-    columns = [
-        # {"name": "code", "label": "コード", "field": "code", "style": "width:60px", "align": "left"},
-        {"name": "loc", "label": "場所", "field": "loc", "align": "left"},
-        {"name": "latlon", "label": "緯度経度", "field": "latlon", "style": "width:70px", "align": "left"},
-        {"name": "menu", "label": "", "field": "menu", "style": "width:48px", "align": "center"},
-    ]
+    with ui.column().classes("w-full px-4").style(
+        "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
+    ):
+        ui.label("演習場一覧").classes("text-h5")
+        rows = [
+            {"code": "Y", "loc": "矢臼別演習場", "lat": 43.2997, "lon": 144.9873},
+            {"code": "K", "loc": "上富良野演習場", "lat": 43.4230, "lon": 142.4800},
+            {"code": "I", "loc": "岩手山演習場", "lat": 39.8650, "lon": 140.9730},
+            {"code": "O", "loc": "王城寺原演習場", "lat": 38.5710, "lon": 140.8610},
+            {"code": "E", "loc": "東富士演習場", "lat": 35.2947, "lon": 138.8536},
+            {"code": "N", "loc": "北富士演習場", "lat": 35.4500, "lon": 138.8000},
+            {"code": "A", "loc": "饗庭野演習場", "lat": 35.3460, "lon": 136.0390},
+            {"code": "H", "loc": "日出生台演習場", "lat": 33.2860, "lon": 131.3990},
+            {"code": "S", "loc": "防衛装備庁下北試験場", "lat": 41.3050, "lon": 141.3070},
+        ]
+        for row in rows:
+            row["latlon"] = f'{row["lat"]:.1f}\n{row["lon"]:.1f}'
+        columns = [
+            # {"name": "code", "label": "コード", "field": "code", "style": "width:60px", "align": "left"},
+            {"name": "loc", "label": "場所", "field": "loc", "align": "left"},
+            {"name": "latlon", "label": "緯度経度", "field": "latlon", "style": "width:70px", "align": "left"},
+            {"name": "menu", "label": "", "field": "menu", "style": "width:48px", "align": "center"},
+        ]
 
-    async def row_clicked(e):
-        await dialog_latest_weather()
+        async def row_clicked(e):
+            await dialog_latest_weather()
 
-    def open_map(row):
-        ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
+        def open_map(row):
+            ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
 
-    table = ui.table(columns=columns, rows=rows, row_key="code").props("flat bordered").classes("w-full glass-table")
-    table.on("row-click", row_clicked)
+        table = ui.table(columns=columns, rows=rows, row_key="code").props("flat bordered").classes("w-full glass-table")
+        table.on("row-click", row_clicked)
 
-    with table.add_slot('body-cell-latlon', r'''
-        <q-td :props="props" style="white-space: pre-line;">
-        {{ props.value }}
-        </q-td>
-        '''):
-        pass
+        with table.add_slot('body-cell-latlon', r'''
+            <q-td :props="props" style="white-space: pre-line;">
+            {{ props.value }}
+            </q-td>
+            '''):
+            pass
 
-    with table.add_slot('body-cell-menu', r'''
-        <q-td :props="props" auto-width>
-        <q-btn flat round dense icon="more_vert" @click.stop="$parent.$emit('menu-click', props.row)">
-            <q-menu class="glass-menu" :offset="[0, -24]" >
-            <q-list style="min-width:180px">
+        with table.add_slot('body-cell-menu', r'''
+            <q-td :props="props" auto-width>
+            <q-btn flat round dense icon="more_vert" @click.stop="$parent.$emit('menu-click', props.row)">
+                <q-menu class="glass-menu" :offset="[0, -24]" >
+                <q-list style="min-width:180px">
 
-                <q-item clickable v-close-popup @click="$parent.$emit('map-click', props.row)">
-                <q-item-section avatar>
-                    <q-icon name="map"/>
-                </q-item-section>
-                <q-item-section>地図を表示</q-item-section>
-                </q-item>
+                    <q-item clickable v-close-popup @click="$parent.$emit('map-click', props.row)">
+                    <q-item-section avatar>
+                        <q-icon name="map"/>
+                    </q-item-section>
+                    <q-item-section>地図を表示</q-item-section>
+                    </q-item>
 
-                <q-item clickable v-close-popup @click="$parent.$emit('detail-click', props.row)">
-                <q-item-section avatar>
-                    <q-icon name="info"/>
-                </q-item-section>
-                <q-item-section>詳細</q-item-section>
-                </q-item>
+                    <q-item clickable v-close-popup @click="$parent.$emit('detail-click', props.row)">
+                    <q-item-section avatar>
+                        <q-icon name="info"/>
+                    </q-item-section>
+                    <q-item-section>詳細</q-item-section>
+                    </q-item>
 
-                <q-item clickable v-close-popup @click="$parent.$emit('favorite-click', props.row)">
-                <q-item-section avatar>
-                    <q-icon name="star"/>
-                </q-item-section>
-                <q-item-section>お気に入り</q-item-section>
-                </q-item>
+                    <q-item clickable v-close-popup @click="$parent.$emit('favorite-click', props.row)">
+                    <q-item-section avatar>
+                        <q-icon name="star"/>
+                    </q-item-section>
+                    <q-item-section>お気に入り</q-item-section>
+                    </q-item>
 
-            </q-list>
-            </q-menu>
-        </q-btn>
+                </q-list>
+                </q-menu>
+            </q-btn>
 
-        </q-td>
-        '''):
-        pass
+            </q-td>
+            '''):
+            pass
 
-    table.on("map-click", lambda e: open_map(e.args))
-    table.on("menu-click", None)
-    table.on("detail-click", lambda e: ui.notify(f'詳細: {e.args["loc"]}', position="top"))
-    table.on("favorite-click", lambda e: ui.notify(f'お気に入り: {e.args["loc"]}', position="top"))
+        table.on("map-click", lambda e: open_map(e.args))
+        table.on("menu-click", None)
+        table.on("detail-click", lambda e: ui.notify(f'詳細: {e.args["loc"]}', position="top"))
+        table.on("favorite-click", lambda e: ui.notify(f'お気に入り: {e.args["loc"]}', position="top"))
     floating_nav("table")
 
 
@@ -169,29 +175,31 @@ def map_page(lat: float, lon: float):
 
 
 def settings_page():
-    ui.label("設定").classes("text-h5")
+    with ui.column().classes("w-full px-4").style(
+        "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
+    ):
+        ui.label("設定").classes("text-h5")
 
-    def change_theme(e):
-        app.storage.user[DISPLAY_THEME_KEY] = e.value
-        apply_display_theme(e.value)
+        def change_theme(e):
+            app.storage.user[DISPLAY_THEME_KEY] = e.value
+            apply_display_theme(e.value)
 
-    with ui.column():
+        with ui.column():
 
-        with ui.row().classes("w-full items-center"):
-            ui.label("表示テーマ").classes("w-25")
-            ui.select(
-                options=DISPLAY_THEMES,
-                value=app.storage.user.get(DISPLAY_THEME_KEY, "system"),
-                on_change=change_theme,
-            ).props('outlined dense behavior="menu"')
+            with ui.row().classes("w-full items-center"):
+                ui.label("表示テーマ").classes("w-25")
+                ui.select(
+                    options=DISPLAY_THEMES,
+                    value=app.storage.user.get(DISPLAY_THEME_KEY, "system"),
+                    on_change=change_theme,
+                ).props('outlined dense behavior="menu"')
 
-        with ui.row().classes("w-full items-center"):
-            ui.label("表示単位").classes("w-25")
-            ui.select(
-                options=["m/s", "kt"],
-                value="m/s",
-            ).props('outlined dense behavior="menu"')
-
+            with ui.row().classes("w-full items-center"):
+                ui.label("表示単位").classes("w-25")
+                ui.select(
+                    options=["m/s", "kt"],
+                    value="m/s",
+                ).props('outlined dense behavior="menu"')
     floating_nav("settings")
 
 
