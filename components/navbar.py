@@ -1,32 +1,62 @@
 from nicegui import ui
 
+
 def floating_nav(current: str):
     tabs = [
         ("home", "ホーム", "/", "home"),
-        ("table_chart", "演習場", "/table", "table"),
+        ("table_chart", "演習場一覧", "/table", "table"),
         ("settings", "設定", "/settings", "settings"),
     ]
 
-    with ui.element("div").classes("floating-nav"):
+    current_index = next(
+        (
+            i
+            for i, (_, _, _, name) in enumerate(tabs)
+            if name == current
+        ),
+        0,
+    )
 
-        for icon, label, path, name in tabs:
+    with ui.element("div").classes("floating-nav") as nav:
 
-            active = (current == name)
+        # 選択カーソル
+        ui.element("div").classes("floating-nav-cursor")
 
-            ui.button(
-                label if active else "",
-                icon=icon,
-                on_click=lambda p=path: ui.navigate.to(p),
-            ).props(
-                "unelevated no-caps rounded" if active else "flat round"
-            ).style(f"""
-                width: {'120px' if active else '48px'};
-                height:48px;
-                border-radius:999px;
+        # ナビゲーション項目
+        for index, (icon, label, path, name) in enumerate(tabs):
 
-                transition:
+            item = (
+                ui.element("div").classes("floating-nav-item").props(f'data-index="{index}"')
+            )
 
-                    all .25s cubic-bezier(.2,.8,.2,1);
+            if index == current_index:
+                item.classes(add="is-active")
 
-                {'background:rgba(255,255,255,.35);' if active else ''}
-            """)
+            with item:
+                ui.icon(icon).classes("floating-nav-icon")
+                ui.label(label).classes("floating-nav-label")
+
+            # 通常クリック
+            item.on(
+                "click",
+                lambda _, p=path: ui.navigate.to(p),
+            )
+
+    # 初期状態
+    ui.run_javascript(f"""
+        requestAnimationFrame(() => {{
+            const nav = document.querySelector('.floating-nav');
+
+            if (!nav) return;
+
+            nav.style.setProperty(
+                '--nav-index',
+                '{current_index}'
+            );
+
+            nav.style.setProperty(
+                '--nav-count',
+                '{len(tabs)}'
+            );
+        }});
+    """)
