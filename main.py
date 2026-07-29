@@ -4,13 +4,18 @@ import os
 from urllib.request import build_opener
 import pygrib
 
-# from components.uicolors import apply_display_theme
 from components.navbar import floating_nav
-from services.fnl_fetcher import get_latest_fnl
 from components.dialog import dialog_latest_weather
+from components.colors import UI_COLORS
+
+
+def home_page():
+    ui.label("ホーム").classes("text-h5")
+    floating_nav("home")
 
 
 def table_page():
+    ui.label("演習場一覧").classes("text-h5")
     rows = [
         {"code": "Y", "loc": "矢臼別演習場", "lat": 43.2997, "lon": 144.9873},
         {"code": "K", "loc": "上富良野演習場", "lat": 43.4230, "lon": 142.4800},
@@ -128,15 +133,13 @@ DISPLAY_THEMES = {
     "light": "ライト",
     "dark": "ダーク",
     "olive": "オリーブドラブ",
-    "olive_dark": "オリーブドラブ（ダーク）",
-    "jsdf": "陸上自衛隊迷彩",
+    "olive_dark": "オリーブドラブ (濃)",
 }
 
 BODY_CLASSES = [
     "theme-default",
     "theme-olive",
     "theme-olive-dark",
-    "theme-jsdf",
 ]
 
 dark = ui.dark_mode()
@@ -144,61 +147,29 @@ dark = ui.dark_mode()
 def apply_display_theme(theme: str):
     # bodyクラスをリセット
     ui.query("body").classes(remove=" ".join(BODY_CLASSES))
+    ui.colors(**UI_COLORS[theme])
 
     match theme:
         case "system":
             dark.auto()
-            ui.colors(
-                primary="#1976D2",
-                secondary="#42A5F5",
-                accent="#2196F3",
-            )
             ui.query("body").classes(add="theme-default")
 
         case "light":
             dark.disable()
-            ui.colors(
-                primary="#1976D2",
-                secondary="#42A5F5",
-                accent="#2196F3",
-            )
             ui.query("body").classes(add="theme-default")
 
         case "dark":
             dark.enable()
-            ui.colors(
-                primary="#64B5F6",
-                secondary="#42A5F5",
-                accent="#90CAF9",
-            )
             ui.query("body").classes(add="theme-default")
 
         case "olive":
             dark.enable()
-            ui.colors(
-                primary="#687A34",
-                secondary="#81944A",
-                accent="#A3B96A",
-            )
             ui.query("body").classes(add="theme-olive")
 
         case "olive_dark":
             dark.enable()
-            ui.colors(
-                primary="#80944A",
-                secondary="#94AA58",
-                accent="#B5CC77",
-            )
             ui.query("body").classes(add="theme-olive-dark")
 
-        case "jsdf":
-            dark.enable()
-            ui.colors(
-                primary="#78864A",
-                secondary="#A29363",
-                accent="#C9B979",
-            )
-            ui.query("body").classes(add="theme-jsdf")
 
 theme = app.storage.user.get(DISPLAY_THEME_KEY, "system")
 apply_display_theme(theme)
@@ -207,7 +178,6 @@ apply_display_theme(theme)
 app.add_static_files("/static", "static")
 
 ui.add_head_html("""
-    <link rel="stylesheet" href="/static/css/theme.css">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="manifest" href="/static/manifest.json">
     <script>
@@ -218,7 +188,8 @@ ui.add_head_html("""
 """)
 
 ui.sub_pages({
-    "/": table_page,
+    "/": home_page,
+    "/table": table_page,
     "/map/{lat}/{lon}": map_page,
     "/settings": settings_page,
 }).classes("w-full")
