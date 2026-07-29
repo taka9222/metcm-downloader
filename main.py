@@ -42,7 +42,7 @@ def table_page():
     def open_map(row):
         ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
 
-    table = ui.table(columns=columns, rows=rows, row_key="code").props("flat bordered").classes("w-full")
+    table = ui.table(columns=columns, rows=rows, row_key="code").props("flat bordered").classes("w-full glass-table")
     table.on("row-click", row_clicked)
 
     with table.add_slot('body-cell-latlon', r'''
@@ -232,15 +232,11 @@ ui.add_head_html("""
 
             function updateFromX(clientX) {
                 const rect = nav.getBoundingClientRect();
-                const padding = 6;
-                const usableWidth = rect.width - padding * 2;
-                const x = clientX - rect.left - padding;
-                const sectionWidth = usableWidth / count;
-                let position = x / sectionWidth;
-
-                // 0〜count-1 に制限
-                position = Math.max(0, Math.min(count - 1, position - 0.5));
-                nav.style.setProperty('--nav-index', String(position));
+                const x = clientX - rect.left - 6;
+                const usableWidth = rect.width - 12;
+                const raw = x / (usableWidth / count);
+                const index = Math.round(raw - 0.5);
+                setIndex(index);
             }
 
             function navigate(index) {
@@ -285,15 +281,20 @@ ui.add_head_html("""
                 { passive: false }
             );
 
-            nav.addEventListener('pointerup', (event) => {
-                if (!dragging) return;
-                dragging = false;
-                nav.classList.remove('is-dragging');
-                const finalIndex = Math.max(0, Math.min(count - 1, Math.round(currentPosition)));
-                nav.style.setProperty('--nav-index', String(finalIndex));
-                navigate(finalIndex);
-                event.preventDefault();
-            });
+            nav.addEventListener(
+                'pointerup',
+                (event) => {
+                    if (!dragging) {
+                        return;
+                    }
+                    dragging = false;
+                    nav.classList.remove('is-dragging');
+                    setIndex(currentIndex);
+                    navigate(currentIndex);
+                    event.preventDefault();
+                },
+                { passive: false }
+            );
 
             nav.addEventListener(
                 'pointercancel',

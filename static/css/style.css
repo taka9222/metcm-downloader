@@ -94,27 +94,20 @@ body.theme-olive-dark {
 .floating-nav {
     --nav-index: 0;
     --nav-count: 3;
-
     position: fixed;
     left: 50%;
     bottom: calc(14px + env(safe-area-inset-bottom));
-
     width: min(360px, calc(100vw - 32px));
     height: 68px;
-
     transform: translateX(-50%);
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
     padding: 5px;
 
     /* より丸みを強く */
     border-radius: 999px;
-
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
-
     background: var(--color-nav-bg-light);
 
     /* 細い外周線 */
@@ -124,14 +117,11 @@ body.theme-olive-dark {
     box-shadow:
         0 8px 30px rgba(0, 0, 0, .12),
         inset 0 1px 0 rgba(255, 255, 255, .55);
-
     z-index: 9999;
-
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
-
     isolation: isolate;
 }
 
@@ -155,13 +145,9 @@ body.theme-olive-dark {
         inset 0 1px 0 rgba(255, 255, 255, .55),
         0 2px 8px rgba(0, 0, 0, .08);
     transform: translateX(calc(var(--nav-index) * 100%));
-    transition: transform .38s cubic-bezier(.22, 1, .36, 1);
+    transition: transform .28s cubic-bezier(.2, .8, .2, 1);
     pointer-events: none;
     z-index: 0;
-}
-
-.floating-nav.is-dragging .floating-nav-cursor {
-    transition: none;
 }
 
 .body--dark .floating-nav {
@@ -228,6 +214,118 @@ body.theme-olive-dark {
 
 
 /* 押したとき */
+
 .floating-nav-item:active {
     transform: scale(.94);
+}
+
+
+/* =========================================================
+   Glass Table
+   ========================================================= */
+
+.glass-table {
+    border-radius: 18px;
+    overflow: hidden;
+
+    /* 少し色を落としたライトガラス */
+    background: rgba(235, 237, 240, .72) !important;
+
+    /* 外周の細い枠線 */
+    border: 1px solid rgba(110, 115, 122, .28) !important;
+
+    backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+
+    box-shadow:
+        0 6px 24px rgba(0, 0, 0, .07),
+        inset 0 1px 0 rgba(255, 255, 255, .55);
+}
+
+
+/* テーブル内部は透明にして、外側のガラスを見せる */
+
+.glass-table .q-table__container,
+.glass-table .q-table__middle {
+    background: transparent !important;
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+/*
+ * ヘッダーは本文より不透明にする。
+ * 白すぎない薄いグレー。
+ */
+
+.glass-table thead tr {
+    background: rgba(220, 223, 227, .82);
+}
+
+.glass-table thead th {
+    background: transparent !important;
+
+    font-weight: 600;
+
+    border-bottom:
+        1px solid rgba(100, 105, 112, .22) !important;
+}
+
+
+/* =========================================================
+   Body
+   ========================================================= */
+
+.glass-table tbody tr {
+    background: rgba(245, 246, 247, .38);
+
+    transition:
+        background .15s ease;
+}
+
+.glass-table tbody td {
+    border-color:
+        rgba(100, 105, 112, .14) !important;
+}
+
+
+/* Hover */
+
+.glass-table tbody tr:hover {
+    background: rgba(220, 223, 227, .55);
+}
+
+
+/* =========================================================
+   Dark
+   ========================================================= */
+
+.body--dark .glass-table {
+    background: rgba(38, 39, 41, .55) !important;
+
+    border-color:
+        rgba(255, 255, 255, .15) !important;
+
+    box-shadow:
+        0 8px 28px rgba(0, 0, 0, .22),
+        inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.body--dark .glass-table thead tr {
+    background: rgba(255, 255, 255, .09);
+}
+
+.body--dark .glass-table tbody tr {
+    background: rgba(255, 255, 255, .025);
+}
+
+.body--dark .glass-table tbody tr:hover {
+    background: rgba(255, 255, 255, .08);
+}
+
+.body--dark .glass-table tbody td {
+    border-color:
+        rgba(255, 255, 255, .08) !important;
 }
