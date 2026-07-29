@@ -11,6 +11,75 @@ from components.colors import UI_COLORS
  
 def home_page():
     ui.label("ホーム").classes("text-h5")
+    ui.label("プロトタイプ UI")
+
+    ui.label("直近に使用した演習場").classes("text-subtitle1 q-mt-md")
+
+    with ui.card().classes("w-full"):
+        with ui.row().classes("items-center justify-between w-full"):
+
+            with ui.column().classes("gap-0"):
+                ui.label("矢臼別演習場").classes("text-h6")
+                ui.label("北海道").classes("text-caption text-grey-6")
+                ui.label("43.2997 144.9873").classes("text-caption text-grey-6")
+
+            ui.icon("location_on").classes("text-3xl text-grey-6")
+
+        ui.separator().classes("q-my-sm")
+
+        with ui.row().classes("w-full justify-end"):
+            ui.button(
+                "演習場一覧",
+                icon="list",
+                on_click=lambda: ui.navigate.to("/table"),
+            ).props("flat")
+
+    ui.label("最新の気象情報").classes("text-subtitle1 q-mt-lg")
+
+    with ui.card().classes("w-full"):
+
+        with ui.row().classes("items-center justify-between w-full"):
+            with ui.column().classes("gap-0"):
+                ui.label("○○演習場").classes("text-h6")
+                ui.label("最新データ").classes("text-caption text-grey-6")
+
+            ui.icon("cloud").classes("text-3xl text-grey-6")
+
+        ui.separator().classes("q-my-sm")
+
+        with ui.row().classes("w-full"):
+
+            with ui.column().classes("flex-1 items-center"):
+                ui.label("気温").classes("text-caption text-grey-6")
+                ui.label("25.4 °C").classes("text-body1")
+
+            with ui.column().classes("flex-1 items-center"):
+                ui.label("風速").classes("text-caption text-grey-6")
+                ui.label("4.8 m/s").classes("text-body1")
+
+            with ui.column().classes("flex-1 items-center"):
+                ui.label("湿度").classes("text-caption text-grey-6")
+                ui.label("76 %").classes("text-body1")
+
+        ui.button("最新データを取得", icon="refresh", on_click=dialog_latest_weather,
+        ).props("unelevated").classes("w-full q-mt-md")
+
+    ui.label("高度別の気象データ").classes("text-subtitle1 q-mt-lg")
+
+    with ui.card().classes("w-full"):
+
+        ui.label("高度を選択して気象状態を確認できます。").classes("text-body2")
+
+        with ui.row().classes("items-center w-full q-mt-sm"):
+
+            ui.select(
+                [0, 500, 1000, 1500, 2000, 3000, 5000], value=1000, label="高度",
+            ).classes("flex-1")
+
+            ui.label("m").classes("q-ml-sm")
+
+        ui.button("気象データを表示", icon="analytics").props("flat").classes("w-full q-mt-sm")
+
     floating_nav("home")
 
 
@@ -60,7 +129,7 @@ def table_page():
 
                 <q-item clickable v-close-popup @click="$parent.$emit('map-click', props.row)">
                 <q-item-section avatar>
-                    <q-icon name="place"/>
+                    <q-icon name="map"/>
                 </q-item-section>
                 <q-item-section>地図を表示</q-item-section>
                 </q-item>
@@ -178,7 +247,7 @@ apply_display_theme(theme)
 app.add_static_files("/static", "static")
 
 ui.add_head_html("""
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=20260729-12">
     <link rel="manifest" href="/static/manifest.json">
     <script>
     if ("serviceWorker" in navigator) {

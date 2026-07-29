@@ -13,10 +13,9 @@ async def dialog_latest_weather():
 
     with loading:
         with ui.card().classes('loading-card'):
-            with ui.column().classes('items-center'):
+            with ui.column().classes('items-center w-full'):
                 ui.spinner(size='42px', color='primary')
-                ui.label('最新データを検索しています').classes('loading-title')
-                ui.label('FNLデータサーバーへ問い合わせています').classes('loading-message')
+                ui.label('最新データを検索しています').classes('loading-message')
 
     loading.open()
     await asyncio.sleep(0)
@@ -36,14 +35,14 @@ async def dialog_latest_weather():
 def _dialog_result(result):
 
     if result is None:
-        ui.notify('利用可能なFNLデータが見つかりません', color='negative')
+        ui.notify('気象データの取得に失敗しました', color='negative')
         return
 
     with ui.dialog() as dialog, ui.card().classes('w-96'):
-        ui.label('最新の気象データが見つかりました').classes('text-h6')
+        ui.label('最新の気象データ').classes('text-h6')
         ui.separator()
         ui.label(result["filename"]).classes('text-bold')
-        ui.label(result["time"].strftime('%Y-%m-%d %H UTC'))
+        ui.label(result["time"].strftime('%Y年 %m月 %d日 %H00 UTC'))
         ui.space()
         with ui.row().classes('justify-end'):
             ui.button('過去データを検索', on_click=lambda: search_history(dialog))
