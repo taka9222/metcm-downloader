@@ -1,3 +1,6 @@
+def js_floating_nav():
+    return """
+
 (() => {
     'use strict';
 
@@ -157,3 +160,5 @@
         observe();
     }
 })();
+
+    """

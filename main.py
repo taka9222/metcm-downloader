@@ -4,17 +4,25 @@ import os
 from urllib.request import build_opener
 import pygrib
 
-from components.head import add_head
+from static.head import add_head
 from components.navbar import floating_nav
 from components.dialog import dialog_latest_weather
 from components.colors import UI_COLORS
 
+
+def page_header(kicker: str, title: str):
+    with ui.column().classes("page-header"):
+        ui.label(kicker).classes("page-header-kicker")
+
+        with ui.column().classes("page-header-title-group"):
+            ui.label(title).classes("page-header-title")
+            ui.element("div").classes("page-header-line")
  
 def home_page():
     with ui.column().classes("w-full px-4").style(
         "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
     ):
-        ui.label("ホーム").classes("text-h5")
+        page_header("OVERVIEW", "ホーム")
         ui.label("PROTOTYPE UI: overall layout may be altered")
 
         ui.label("直近に使用した演習場").classes("text-subtitle1 q-mt-md")
@@ -93,7 +101,7 @@ def table_page():
     with ui.column().classes("w-full px-4").style(
         "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
     ):
-        ui.label("演習場一覧").classes("text-h5")
+        page_header("LOCATIONS", "演習場一覧")
 
         rows = [
             {"code": "Y", "loc": "矢臼別演習場", "lat": 43.2997, "lon": 144.9873},
@@ -236,7 +244,7 @@ def settings_page():
     with ui.column().classes("w-full px-4").style(
         "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
     ):
-        ui.label("設定").classes("text-h5")
+        page_header("SYSTEM", "設定")
 
         def change_theme(e):
             app.storage.user[DISPLAY_THEME_KEY] = e.value
