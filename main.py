@@ -4,6 +4,7 @@ import os
 from urllib.request import build_opener
 import pygrib
 
+from components.head import add_head
 from components.navbar import floating_nav
 from components.dialog import dialog_latest_weather
 from components.colors import UI_COLORS
@@ -91,6 +92,7 @@ def table_page():
         "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
     ):
         ui.label("演習場一覧").classes("text-h5")
+
         rows = [
             {"code": "Y", "loc": "矢臼別演習場", "lat": 43.2997, "lon": 144.9873},
             {"code": "K", "loc": "上富良野演習場", "lat": 43.4230, "lon": 142.4800},
@@ -102,13 +104,21 @@ def table_page():
             {"code": "H", "loc": "日出生台演習場", "lat": 33.2860, "lon": 131.3990},
             {"code": "S", "loc": "防衛装備庁下北試験場", "lat": 41.3050, "lon": 141.3070},
         ]
-        for row in rows:
-            row["latlon"] = f'{row["lat"]:.1f}\n{row["lon"]:.1f}'
+
         columns = [
-            # {"name": "code", "label": "コード", "field": "code", "style": "width:60px", "align": "left"},
-            {"name": "loc", "label": "場所", "field": "loc", "align": "left"},
-            {"name": "latlon", "label": "緯度経度", "field": "latlon", "style": "width:70px", "align": "left"},
-            {"name": "menu", "label": "", "field": "menu", "style": "width:48px", "align": "center"},
+            {
+                "name": "loc",
+                "label": "場所",
+                "field": "loc",
+                "align": "left",
+            },
+            {
+                "name": "menu",
+                "label": "",
+                "field": "menu",
+                "style": "width:48px",
+                "align": "center",
+            },
         ]
 
         async def row_clicked(e):
@@ -117,55 +127,101 @@ def table_page():
         def open_map(row):
             ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
 
-        table = ui.table(columns=columns, rows=rows, row_key="code").props("flat bordered").classes("w-full glass-table")
+        table = ui.table(
+            columns=columns,
+            rows=rows,
+            row_key="code",
+        ).props("flat bordered hide-header").classes("w-full glass-table")
+
         table.on("row-click", row_clicked)
 
-        with table.add_slot('body-cell-latlon', r'''
-            <q-td :props="props" style="white-space: pre-line;">
-            {{ props.value }}
+        # 場所名 + 緯度経度
+        with table.add_slot('body-cell-loc', r'''
+            <q-td :props="props" style="padding-top: 12px; padding-bottom: 12px;">
+                <div class="column items-start">
+                    <div class="text-body1">
+                        {{ props.row.loc }}
+                    </div>
+                    <div
+                        class="text-caption"
+                        style="
+                            display: flex;
+                            gap: 12px;
+                            opacity: 0.55;
+                            font-size: 11px;
+                        "
+                    >
+                        <span>北緯 {{ props.row.lat.toFixed(4) }}</span>
+                        <span>東経 {{ props.row.lon.toFixed(4) }}</span>
+                    </div>
+                </div>
             </q-td>
-            '''):
+        '''):
             pass
 
         with table.add_slot('body-cell-menu', r'''
             <q-td :props="props" auto-width>
-            <q-btn flat round dense icon="more_vert" @click.stop="$parent.$emit('menu-click', props.row)">
-                <q-menu class="glass-menu" :offset="[0, -24]" >
-                <q-list style="min-width:180px">
+                <q-btn
+                    flat
+                    round
+                    dense
+                    icon="more_vert"
+                    @click.stop="$parent.$emit('menu-click', props.row)"
+                >
+                    <q-menu class="glass-menu" :offset="[0, -24]">
+                        <q-list style="min-width:180px">
 
-                    <q-item clickable v-close-popup @click="$parent.$emit('map-click', props.row)">
-                    <q-item-section avatar>
-                        <q-icon name="map"/>
-                    </q-item-section>
-                    <q-item-section>地図を表示</q-item-section>
-                    </q-item>
+                            <q-item
+                                clickable
+                                v-close-popup
+                                @click="$parent.$emit('map-click', props.row)"
+                            >
+                                <q-item-section avatar>
+                                    <q-icon name="map"/>
+                                </q-item-section>
+                                <q-item-section>地図を表示</q-item-section>
+                            </q-item>
 
-                    <q-item clickable v-close-popup @click="$parent.$emit('detail-click', props.row)">
-                    <q-item-section avatar>
-                        <q-icon name="info"/>
-                    </q-item-section>
-                    <q-item-section>詳細</q-item-section>
-                    </q-item>
+                            <q-item
+                                clickable
+                                v-close-popup
+                                @click="$parent.$emit('detail-click', props.row)"
+                            >
+                                <q-item-section avatar>
+                                    <q-icon name="info"/>
+                                </q-item-section>
+                                <q-item-section>詳細</q-item-section>
+                            </q-item>
 
-                    <q-item clickable v-close-popup @click="$parent.$emit('favorite-click', props.row)">
-                    <q-item-section avatar>
-                        <q-icon name="star"/>
-                    </q-item-section>
-                    <q-item-section>お気に入り</q-item-section>
-                    </q-item>
+                            <q-item
+                                clickable
+                                v-close-popup
+                                @click="$parent.$emit('favorite-click', props.row)"
+                            >
+                                <q-item-section avatar>
+                                    <q-icon name="star"/>
+                                </q-item-section>
+                                <q-item-section>お気に入り</q-item-section>
+                            </q-item>
 
-                </q-list>
-                </q-menu>
-            </q-btn>
-
+                        </q-list>
+                    </q-menu>
+                </q-btn>
             </q-td>
-            '''):
+        '''):
             pass
 
         table.on("map-click", lambda e: open_map(e.args))
         table.on("menu-click", None)
-        table.on("detail-click", lambda e: ui.notify(f'詳細: {e.args["loc"]}', position="top"))
-        table.on("favorite-click", lambda e: ui.notify(f'お気に入り: {e.args["loc"]}', position="top"))
+        table.on(
+            "detail-click",
+            lambda e: ui.notify(f'詳細: {e.args["loc"]}', position="top")
+        )
+        table.on(
+            "favorite-click",
+            lambda e: ui.notify(f'お気に入り: {e.args["loc"]}', position="top")
+        )
+
     floating_nav("table")
 
 
@@ -254,16 +310,7 @@ apply_display_theme(theme)
 # PWA化
 app.add_static_files("/static", "static")
 
-ui.add_head_html("""
-    <link rel="stylesheet" href="/static/css/style.css?v=20260729-13">
-    <link rel="manifest" href="/static/manifest.json">
-    <script src="/static/js/floating_nav.js?v=20260729-1"></script>
-    <script>
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/static/sw.js");
-    }
-    </script>
-""")
+add_head()
 
 ui.sub_pages({
     "/": home_page,
