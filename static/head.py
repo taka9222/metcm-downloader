@@ -6,10 +6,7 @@ from static.css.hero_card import css_hero_card
 from static.js.service_worker import js_service_worker
 from static.js.floating_nav import js_floating_nav
 
-# ============================================================
 # CSSを一括登録
-# ============================================================
-
 def add_css():
     ui.add_head_html(
         f"""
@@ -56,15 +53,15 @@ def css_common():
         background: #28311B;
     }
 
-    .page-content {
+.page-content {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1300px;
     margin: 0 auto;
 
-    padding: clamp(20px, 3vw, 48px)
-             clamp(16px, 4vw, 64px)
+    padding: clamp(16px, 3vw, 40px)
+             clamp(12px, 3vw, 39px)
              calc(
-                 clamp(32px, 4vw, 56px)
+                 clamp(24px, 4vw, 48px)
                  + 100px
                  + env(safe-area-inset-bottom)
              );
