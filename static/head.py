@@ -55,6 +55,22 @@ def css_common():
     body.theme-olive-dark {
         background: #28311B;
     }
+
+    .page-content {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    padding: clamp(20px, 3vw, 48px)
+             clamp(16px, 4vw, 64px)
+             calc(
+                 clamp(32px, 4vw, 56px)
+                 + 100px
+                 + env(safe-area-inset-bottom)
+             );
+
+    box-sizing: border-box;
+}
     """
 
 # ============================================================

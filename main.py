@@ -19,9 +19,7 @@ def page_header(kicker: str, title: str):
             ui.element("div").classes("page-header-line")
  
 def home_page():
-    with ui.column().classes("w-full px-4").style(
-        "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
-    ):
+    with ui.column().classes("page-content"):
         page_header("OVERVIEW", "ホーム")
         ui.label("PROTOTYPE UI: overall layout may be altered")
 
@@ -98,9 +96,7 @@ def home_page():
 
 
 def table_page():
-    with ui.column().classes("w-full px-4").style(
-        "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
-    ):
+    with ui.column().classes("page-content"):
         page_header("LOCATIONS", "演習場一覧")
 
         rows = [
@@ -241,9 +237,7 @@ def map_page(lat: float, lon: float):
 
 
 def settings_page():
-    with ui.column().classes("w-full px-4").style(
-        "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
-    ):
+    with ui.column().classes("page-content"):
         page_header("SYSTEM", "設定")
 
         def change_theme(e):
