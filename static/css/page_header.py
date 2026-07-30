@@ -41,7 +41,7 @@ def css_page_header():
 .page-header-line {
     width: 100%;
     height: 1px;
-    margin-top: 10px;
+    margin-top: 2px;
     border-radius: 999px;
     background: var(--header-line);
 }

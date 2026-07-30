@@ -300,6 +300,7 @@ def css_glass_table():
         border: 1px solid rgba(110, 115, 122, .28) !important;
         backdrop-filter: blur(20px) saturate(120%);
         -webkit-backdrop-filter: blur(20px) saturate(120%);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
     }
 
 

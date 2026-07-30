@@ -29,6 +29,12 @@ def css_hero_card():
         box-shadow 0.25s ease;
 }
 
+.location-card-image,
+.location-card-fade,
+.location-card-hud {
+    border-radius: inherit;
+}
+
 
 /* =========================================================
    Dark mode - Card
