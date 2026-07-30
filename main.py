@@ -19,24 +19,26 @@ def home_page():
 
         ui.label("直近に使用した演習場").classes("text-subtitle1 q-mt-md")
 
-        with ui.card().classes("w-full"):
-            with ui.row().classes("items-center justify-between w-full"):
+        with ui.card().classes("w-full location-card"):
+            ui.image("/static/images/yausubetsu.jpg").classes("location-card-image")  # 背景写真
+            ui.element("div").classes("location-card-fade")  # 左側の白いフェード
+            ui.element("div").classes("location-card-hud")  # 薄いHUDエフェクト
 
-                with ui.column().classes("gap-0"):
-                    ui.label("矢臼別演習場").classes("text-h6")
-                    ui.label("北海道").classes("text-caption text-grey-6")
-                    ui.label("43.2997 144.9873").classes("text-caption text-grey-6")
+            with ui.column().classes("location-card-content"):  # コンテンツ
+                with ui.row().classes("items-start justify-between w-full"):  # 上部
+                    with ui.column().classes("gap-0"):
+                        ui.label("YAUSUBETSU TRAINING AREA").classes("location-eyebrow")
+                        ui.label("矢臼別演習場").classes("location-title")
+                        ui.label("北海道").classes("location-region")
 
-                ui.icon("location_on").classes("text-3xl text-grey-6")
+                with ui.row().classes("location-coordinate-row"):  # 座標
+                    ui.icon("gps_fixed").classes("location-coordinate-icon")
 
-            ui.separator().classes("q-my-sm")
+                    with ui.column().classes("gap-0"):
+                        ui.label("北緯 43.2997 東経 144.9873").classes("location-coordinate")
 
-            with ui.row().classes("w-full justify-end"):
-                ui.button(
-                    "演習場一覧",
-                    icon="list",
-                    on_click=lambda: ui.navigate.to("/table"),
-                ).props("flat")
+                ui.button("現在地を取得", icon="my_location", on_click=None,
+                ).props("flat").classes("location-gps-button")  # 下部ボタン
 
         ui.label("最新の気象情報").classes("text-subtitle1 q-mt-lg")
 
@@ -47,7 +49,7 @@ def home_page():
                     ui.label("○○演習場").classes("text-h6")
                     ui.label("最新データ").classes("text-caption text-grey-6")
 
-                ui.icon("cloud").classes("text-3xl text-grey-6")
+                ui.icon("sunny").classes("text-3xl text-grey-6")
 
             ui.separator().classes("q-my-sm")
 

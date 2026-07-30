@@ -9,6 +9,7 @@ def add_css():
         f"""
         <style>
         {css_common()}
+        {css_hero_card()}
         {css_glass_menu()}
         {css_loading_panel()}
         {css_floating_nav()}
@@ -37,6 +38,237 @@ def css_common():
     body.theme-olive-dark {
         background: #28311B;
     }
+    """
+
+
+def css_hero_card():
+    return """
+/* ===============================
+   Location Card
+   =============================== */
+
+.location-card {
+    position: relative;
+    overflow: hidden;
+
+    min-height: 260px;
+
+    padding: 0 !important;
+
+    border-radius: 18px;
+
+    background: #eef1f3;
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.10);
+}
+
+
+/* ===============================
+   Background image
+   =============================== */
+
+.location-card-image {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    /*
+     * 元画像が縦長なので、
+     * 少し右寄りを見せる
+     */
+    object-position: 65% center;
+
+    z-index: 0;
+}
+
+
+/* ===============================
+   White fade
+   =============================== */
+
+.location-card-fade {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+
+    background:
+        /* メインの斜めフェード */
+        linear-gradient(
+            120deg,
+            rgba(248, 250, 252, 1) 0%,
+            rgba(248, 250, 252, 1) 30%,
+            rgba(248, 250, 252, 0.96) 40%,
+            rgba(248, 250, 252, 0.72) 50%,
+            rgba(248, 250, 252, 0.25) 61%,
+            rgba(248, 250, 252, 0.00) 75%
+        ),
+
+        /* 上からの薄い光 */
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.45) 0%,
+            rgba(255, 255, 255, 0.00) 55%
+        );
+}
+
+
+/* ===============================
+   HUD overlay
+   =============================== */
+
+.location-card-hud {
+    position: absolute;
+    inset: 0;
+
+    z-index: 2;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.30) 0%,
+            transparent 30%
+        );
+
+    border: 1px solid rgba(255,255,255,0.65);
+}
+
+
+/* ===============================
+   Content
+   =============================== */
+
+.location-card-content {
+    position: relative;
+
+    z-index: 3;
+
+    width: 100%;
+    min-height: 260px;
+
+    padding: 24px;
+}
+
+
+/* ===============================
+   Eyebrow
+   =============================== */
+
+.location-eyebrow {
+    font-size: 9px;
+    font-weight: 600;
+
+    letter-spacing: 0.28em;
+
+    color: rgba(50, 65, 78, 0.48);
+
+    margin-bottom: 3px;
+}
+
+
+/* ===============================
+   Title
+   =============================== */
+
+.location-title {
+    font-size: 27px;
+    line-height: 1.15;
+
+    font-weight: 700;
+
+    letter-spacing: 0.01em;
+
+    color: #1b2735;
+
+    text-shadow:
+        0 1px 1px rgba(255,255,255,0.8);
+}
+
+
+/* ===============================
+   Region
+   =============================== */
+
+.location-region {
+    margin-top: 7px;
+
+    padding-left: 10px;
+
+    border-left: 2px solid rgba(35, 125, 130, 0.75);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #26787d;
+}
+
+
+/* ===============================
+   Coordinate
+   =============================== */
+
+.location-coordinate-row {
+    margin-top: 24px;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.location-coordinate-icon {
+    font-size: 20px;
+
+    color: rgba(70, 85, 96, 0.55);
+}
+
+.location-coordinate {
+    font-size: 12px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.04em;
+
+    color: rgba(55, 68, 80, 0.72);
+
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* ===============================
+   GPS button
+   =============================== */
+
+.location-gps-button {
+    align-self: flex-start;
+
+    margin-top: auto;
+
+    min-height: 54px;
+
+    padding: 0 22px !important;
+
+    border: 1px solid rgba(255,255,255,0.8);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,0.28);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    color: #263746;
+
+    box-shadow:
+        0 2px 12px rgba(0,0,0,0.06);
+}
     """
 
 # ============================================================
