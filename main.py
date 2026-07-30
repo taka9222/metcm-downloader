@@ -15,7 +15,7 @@ def home_page():
         "padding-bottom: calc(100px + env(safe-area-inset-bottom));"
     ):
         ui.label("ホーム").classes("text-h5")
-        ui.label("プロトタイプ UI")
+        ui.label("PROTOTYPE UI: overall layout may be altered")
 
         ui.label("直近に使用した演習場").classes("text-subtitle1 q-mt-md")
 
