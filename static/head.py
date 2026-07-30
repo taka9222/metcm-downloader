@@ -2,6 +2,10 @@ from nicegui import ui
 
 from static.css.page_header import css_page_header
 from static.css.hero_card import css_hero_card
+from static.css.table import css_table
+from static.css.table_menu import css_table_menu
+from static.css.floating_nav import css_floating_nav
+
 
 from static.js.service_worker import js_service_worker
 from static.js.floating_nav import js_floating_nav
@@ -14,10 +18,10 @@ def add_css():
         {css_common()}
         {css_page_header()}
         {css_hero_card()}
-        {css_glass_menu()}
+        {css_table()}
+        {css_table_menu()}
         {css_loading_panel()}
         {css_floating_nav()}
-        {css_glass_table()}
         </style>
         """
     )
@@ -70,58 +74,6 @@ def css_common():
 }
     """
 
-# ============================================================
-# Glass Menu
-# ============================================================
-
-def css_glass_menu():
-    return """
-    .glass-menu {
-        backdrop-filter: blur(24px) saturate(180%);
-        -webkit-backdrop-filter: blur(24px) saturate(180%);
-        background: rgba(255,255,255,.60);
-        border: 1px solid rgba(255,255,255,.35);
-        border-radius: 18px;
-        box-shadow:
-            0 10px 40px rgba(0,0,0,.18),
-            inset 0 1px rgba(255,255,255,.35);
-        overflow: hidden;
-    }
-
-    .body--dark .glass-menu,
-    .theme-olive-dark .glass-menu {
-        background: rgba(40,40,40,.55);
-        border: 1px solid rgba(255,255,255,.12);
-        box-shadow:
-            0 10px 40px rgba(0,0,0,.35),
-            inset 0 1px rgba(255,255,255,.08);
-    }
-
-    .glass-menu .q-item {
-        min-height: 44px;
-        border-radius: 12px;
-        margin: 4px;
-        transition: background .15s;
-    }
-
-    .glass-menu .q-item__section--avatar {
-        min-width: 36px;
-    }
-
-    .glass-menu .q-item:hover {
-        background: rgba(255,255,255,.18);
-    }
-
-    .glass-menu .q-item:active {
-        background: rgba(255,255,255,.28);
-    }
-
-    .q-menu__content {
-        z-index: 10000 !important;
-        border-radius: 20px;
-        overflow: hidden;
-    }
-    """
 
 # ============================================================
 # Glass Loading Panel
@@ -174,205 +126,6 @@ def css_loading_panel():
     }
     """
 
-# ============================================================
-# Floating Navigation Bar
-# ============================================================
-
-def css_floating_nav():
-    return """
-    .floating-nav {
-        --nav-index: 0;
-        --nav-count: 3;
-        position: fixed;
-        left: 50%;
-        bottom: calc(14px + env(safe-area-inset-bottom));
-        width: min(360px, calc(100vw - 32px));
-        height: 68px;
-        transform: translateX(-50%);
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        padding: 5px;
-        border-radius: 999px;
-        backdrop-filter: blur(28px) saturate(180%);
-        -webkit-backdrop-filter: blur(28px) saturate(180%);
-        background: var(--color-nav-bg-light);
-        border: 1px solid rgba(25, 25, 25, .16);
-        box-shadow:
-            0 8px 30px rgba(0, 0, 0, .12),
-            inset 0 1px 0 rgba(255, 255, 255, .55);
-        z-index: 9999;
-        touch-action: none;
-        user-select: none;
-        -webkit-user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        isolation: isolate;
-    }
-
-
-    /* 選択カーソル */
-    .floating-nav-cursor {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        width: calc((100% - 10px) / var(--nav-count));
-        height: calc(100% - 10px);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, .42);
-        border: 1px solid rgba(25, 25, 25, .16);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, .55),
-            0 2px 8px rgba(0, 0, 0, .08);
-        transform: translateX(calc(var(--nav-index) * 100%));
-        transition: transform .28s cubic-bezier(.2, .8, .2, 1);
-        pointer-events: none;
-        z-index: 0;
-    }
-
-
-    /* Dark Mode */
-    .body--dark .floating-nav {
-        background: var(--color-nav-bg-dark);
-        border: 1px solid rgba(255, 255, 255, .16);
-    }
-    
-    .body--dark .floating-nav-cursor {
-        background: rgba(255, 255, 255, .12);
-        border: 1px solid rgba(255, 255, 255, .16);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, .18),
-            0 2px 8px rgba(0, 0, 0, .18);
-    }
-
-
-    /* 各項目 */
-    .floating-nav-item {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        border-radius: 19px;
-        cursor: pointer;
-        z-index: 1;
-        transition: transform .15s ease;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    /* アイコン */
-    .floating-nav-icon {
-        font-size: 21px;
-        line-height: 1;
-        opacity: .75;
-        transition:
-            transform .2s ease,
-            opacity .2s ease;
-    }
-
-    /* 文字 */
-    .floating-nav-label {
-        font-size: 10px;
-        line-height: 1.1;
-        font-weight: 500;
-        white-space: nowrap;
-        opacity: .70;
-        transition:
-            opacity .2s ease,
-            font-weight .2s ease;
-    }
-
-    /* アクティブ */
-    .floating-nav-item.is-active .floating-nav-icon {
-        opacity: 1;
-        transform: scale(1.04);
-    }
-
-    .floating-nav-item.is-active .floating-nav-label {
-        opacity: 1;
-        font-weight: 600;
-    }
-
-    /* 押したとき */
-    .floating-nav-item:active {
-        transform: scale(.94);
-    }
-    """
-
-# ============================================================
-# Glass Table
-# ============================================================
-
-def css_glass_table():
-    return """
-    .glass-table {
-        border-radius: 18px;
-        overflow: hidden;
-        background: rgba(235, 237, 240, .72) !important;
-        border: 1px solid rgba(110, 115, 122, .28) !important;
-        backdrop-filter: blur(20px) saturate(120%);
-        -webkit-backdrop-filter: blur(20px) saturate(120%);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
-    }
-
-
-    /* テーブル内部は透明にして、外側のガラスを見せる */
-    .glass-table .q-table__container,
-    .glass-table .q-table__middle {
-        background: transparent !important;
-    }
-
-
-    /* Header */
-    .glass-table thead tr {
-        background: rgba(220, 223, 227, .82);
-    }
-
-    .glass-table thead th {
-        background: transparent !important;
-        font-weight: 600;
-        border-bottom: 1px solid rgba(100, 105, 112, .22) !important;
-    }
-
-    /* Body */
-    .glass-table tbody tr {
-        background: rgba(255, 255, 255, .38);
-        transition: background .15s ease;
-    }
-
-    .glass-table tbody td {
-        border-color:
-            rgba(100, 105, 112, .14) !important;
-    }
-
-    /* Hover */
-    .glass-table tbody tr:hover {
-        background: rgba(220, 223, 227, .55);
-    }
-
-    /* Dark Mode */
-    .body--dark .glass-table {
-        background: rgba(38, 39, 41, .55) !important;
-        border-color: rgba(255, 255, 255, .15) !important;
-    }
-
-    .body--dark .glass-table thead tr {
-        background: rgba(255, 255, 255, .09);
-    }
-
-    .body--dark .glass-table tbody tr {
-        background: rgba(255, 255, 255, .025);
-    }
-
-    .body--dark .glass-table tbody tr:hover {
-        background: rgba(255, 255, 255, .08);
-    }
-
-    .body--dark .glass-table tbody td {
-        border-color: rgba(255, 255, 255, .08) !important;
-    }
-    """
 
 # ============================================================
 # その他のHead要素
