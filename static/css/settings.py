@@ -86,9 +86,7 @@ def css_settings():
 
 .settings-table {
     width: 100% !important;
-
     background: transparent !important;
-
     box-shadow: none !important;
 }
 
@@ -111,29 +109,31 @@ def css_settings():
 
 .settings-table tbody tr {
     height: 68px;
-
     background: transparent;
-
     cursor: pointer;
-
-    transition:
-        background .15s ease;
+    transition: background .15s ease;
 }
 
 
-.settings-table tbody tr:hover {
-    background:
-        rgba(225, 229, 233, .55);
+/* マウスなど、実際にホバーできるデバイスのみ */
+@media (hover: hover) and (pointer: fine) {
+    .settings-table tbody tr:hover {
+        background: rgba(225, 229, 233, .55);
+    }
 }
 
+@media (hover: none) {
+    .settings-table tbody tr:active {
+        background: rgba(225, 229, 233, .55);
+    }
+}
 
 /* =========================================================
    Row Divider
    ========================================================= */
 
 .settings-table tbody tr + tr td {
-    border-top:
-        1px solid rgba(100, 108, 116, .13) !important;
+    border-top: 1px solid rgba(100, 108, 116, .13) !important;
 }
 
 
@@ -143,11 +143,8 @@ def css_settings():
 
 .settings-table td {
     height: 68px;
-
     padding: 0 20px !important;
-
     border: none !important;
-
     vertical-align: middle;
 }
 
@@ -163,9 +160,7 @@ def css_settings():
 
 .settings-table-value-cell {
     width: 1%;
-
     white-space: nowrap;
-
     text-align: right;
 }
 
@@ -177,14 +172,10 @@ def css_settings():
 .settings-table-title {
     display: flex;
     align-items: center;
-
     gap: 14px;
-
     font-size: 16px;
     font-weight: 500;
-
     color: #202a35;
-
     white-space: nowrap;
 }
 
@@ -195,9 +186,7 @@ def css_settings():
 
 .settings-table-icon {
     width: 28px;
-
     font-size: 20px;
-
     color: #5f6871;
 }
 
@@ -210,13 +199,9 @@ def css_settings():
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
     gap: 6px;
-
     font-size: 12px;
-
     color: #858d95;
-
     white-space: nowrap;
 }
 
@@ -227,7 +212,6 @@ def css_settings():
 
 .settings-table-arrow {
     font-size: 20px;
-
     color: #9aa1a8;
 }
 
@@ -237,60 +221,34 @@ def css_settings():
    ========================================================= */
 
 .setting-dialog {
-    width: min(
-        420px,
-        calc(100vw - 32px)
-    );
-
+    width: min(420px, calc(100vw - 32px));
     max-width: 420px;
-
     padding: 0;
-
     overflow: hidden;
-
     border-radius: 20px;
-
-    background:
-        rgba(248, 249, 250, .94);
-
-    backdrop-filter:
-        blur(25px) saturate(120%);
-
-    -webkit-backdrop-filter:
-        blur(25px) saturate(120%);
-
-    box-shadow:
-        0 20px 60px rgba(20, 25, 30, .18);
+    background: rgba(248, 249, 250, .94);
+    backdrop-filter: blur(25px) saturate(120%);
+    -webkit-backdrop-filter: blur(25px) saturate(120%);
+    box-shadow: 0 20px 60px rgba(20, 25, 30, .18);
 }
 
 
 /* Dialog Header */
-
 .setting-dialog-header {
     width: 100%;
-
     min-height: 58px;
-
     padding: 0 12px 0 20px;
-
     box-sizing: border-box;
-
     align-items: center;
-
     justify-content: space-between;
-
-    border-bottom:
-        1px solid rgba(100, 108, 116, .13);
+    border-bottom: 1px solid rgba(100, 108, 116, .13);
 }
-
 
 .setting-dialog-title {
     font-size: 18px;
     font-weight: 600;
-
     color: #202a35;
 }
-
 
 /* =========================================================
    Options
@@ -306,38 +264,29 @@ def css_settings():
 .setting-option {
     width: 100%;
     min-height: 52px;
-
     padding: 0 20px;
-
     box-sizing: border-box;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     cursor: pointer;
-
-    transition:
-        background .15s ease;
+    transition: background .15s ease;
 }
 
 
 .setting-option:hover {
-    background:
-        rgba(225, 229, 233, .55);
+    background: rgba(225, 229, 233, .55);
 }
 
 
 .setting-option-label {
     font-size: 15px;
-
     color: #202a35;
 }
 
 
 .setting-option-check {
     font-size: 20px;
-
     color: #5f6871;
 }
 
