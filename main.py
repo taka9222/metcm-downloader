@@ -19,89 +19,122 @@ def page_header(kicker: str, title: str):
             ui.element("div").classes("page-header-line")
  
 def home_page():
-    with ui.column().classes("page-content"):
+    with ui.column().classes("page-content home-page"):
         page_header("OVERVIEW", "ホーム")
-        ui.label("PROTOTYPE UI: overall layout may be altered")
+        ui.label("PROTOTYPE UI: overall layout may be altered").classes("home-prototype-note")
 
-        ui.label("直近に使用した演習場").classes("text-subtitle1 q-mt-md")
+        section_header("RECENT LOCATIONS", "直近に使用した演習場")
+        location_card(eyebrow="YAUSUBETSU TRAINING AREA", title="矢臼別演習場", region="北海道",
+                      coordinate="北緯 43.2997  東経 144.9873", image="/static/images/yausubetsu.jpg", recent=True)
+        location_card(eyebrow="HIGASHI FUJI TRAINING AREA", title="東富士演習場", region="静岡",
+                      coordinate="北緯 35.2690  東経 138.8200", image="/static/images/higashifuji.jpg")
 
-        with ui.card().classes("w-full location-card"):
-            ui.image("/static/images/yausubetsu.jpg").classes("location-card-image")  # 背景写真
-            ui.element("div").classes("location-card-fade")  # 左側の白いフェード
-            ui.element("div").classes("location-card-hud")  # 薄いHUDエフェクト
+        section_header("LATEST WEATHER", "最新の気象情報")
+        weather_card()
 
-            with ui.column().classes("location-card-content"):  # コンテンツ
-                with ui.row().classes("items-start justify-between w-full"):  # 上部
-                    with ui.column().classes("gap-0"):
-                        ui.label("YAUSUBETSU TRAINING AREA").classes("location-eyebrow")
-                        ui.label("矢臼別演習場").classes("location-title")
-                        ui.label("北海道").classes("location-region")
-
-                with ui.row().classes("location-coordinate-row"):  # 座標
-                    ui.icon("gps_fixed").classes("location-coordinate-icon")
-
-                    with ui.column().classes("gap-0"):
-                        ui.label("北緯 43.2997 東経 144.9873").classes("location-coordinate")
-
-                ui.button("現在地を取得", icon="my_location", on_click=None,
-                ).props("flat").classes("location-gps-button")  # 下部ボタン
-
-        ui.label("最新の気象情報").classes("text-subtitle1 q-mt-lg")
-
-        with ui.card().classes("w-full"):
-
-            with ui.row().classes("items-center justify-between w-full"):
-                with ui.column().classes("gap-0"):
-                    ui.label("○○演習場").classes("text-h6")
-                    ui.label("最新データ").classes("text-caption text-grey-6")
-
-                ui.icon("sunny").classes("text-3xl text-grey-6")
-
-            ui.separator().classes("q-my-sm")
-
-            with ui.row().classes("w-full"):
-
-                with ui.column().classes("flex-1 items-center"):
-                    ui.label("気温").classes("text-caption text-grey-6")
-                    ui.label("25.4 °C").classes("text-body1")
-
-                with ui.column().classes("flex-1 items-center"):
-                    ui.label("風速").classes("text-caption text-grey-6")
-                    ui.label("4.8 m/s").classes("text-body1")
-
-                with ui.column().classes("flex-1 items-center"):
-                    ui.label("湿度").classes("text-caption text-grey-6")
-                    ui.label("76 %").classes("text-body1")
-
-            ui.button("最新データを取得", icon="refresh", on_click=dialog_latest_weather,
-            ).props("unelevated").classes("w-full q-mt-md")
-
-        ui.label("高度別の気象データ").classes("text-subtitle1 q-mt-lg")
-
-        with ui.card().classes("w-full"):
-
-            ui.label("高度を選択して気象状態を確認できます。").classes("text-body2")
-
-            with ui.row().classes("items-center w-full q-mt-sm"):
-
-                ui.select(
-                    [0, 500, 1000, 1500, 2000, 3000, 5000], value=1000, label="高度",
-                ).classes("flex-1")
-
-                ui.label("m").classes("q-ml-sm")
-
-            ui.button("気象データを表示", icon="analytics").props("flat").classes("w-full q-mt-sm")
+        section_header("ATMOSPHERIC PROFILE", "高度別の気象データ")
+        altitude_weather_card()
 
     floating_nav("home")
 
+def location_card(
+    eyebrow: str, title: str, region: str, coordinate: str, image: str, recent: bool = False
+):
+    with ui.card().classes("w-full location-card"):
+        ui.image(image).classes("location-card-image")
+        ui.element("div").classes("location-card-fade")
+        ui.element("div").classes("location-card-hud")
+
+        with ui.column().classes("location-card-content"):
+            with ui.row().classes("items-start justify-between w-full"):
+                with ui.column().classes("gap-0"):
+                    ui.label(eyebrow).classes("location-eyebrow")
+                    ui.label(title).classes("location-title")
+                    ui.label(region).classes("location-region")
+
+            if recent:
+                ui.label("RECENT").classes("location-recent-badge")
+
+            with ui.row().classes("location-coordinate-row"):
+                ui.icon("gps_fixed").classes("location-coordinate-icon")
+                with ui.column().classes("gap-0"):
+                    ui.label(coordinate).classes("location-coordinate")
+
+            ui.button("現在地を取得", icon="my_location", on_click=None).props("flat no-caps").classes(
+                "location-gps-button"
+            )
+
+def section_header(eyebrow: str, title: str):
+    with ui.column().classes("dashboard-section-header"):
+        ui.label(eyebrow).classes("dashboard-section-eyebrow")
+        ui.label(title).classes("dashboard-section-title")
+        ui.element("div").classes("dashboard-section-line")
+
+def weather_card():
+    with ui.card().classes("w-full weather-card"):
+        # Header
+        with ui.row().classes("altitude-card-header"):
+            with ui.column().classes("gap-0"):
+                ui.label("LATEST WEATHER").classes("altitude-eyebrow")
+                ui.label("矢臼別演習場").classes("altitude-title")
+
+            ui.icon("cloud").classes("altitude-icon")
+
+        # Divider
+        ui.element("div").classes("weather-divider")
+
+        # Metrics
+        with ui.row().classes("weather-metrics"):
+            weather_metric("25.4", "°C", "TEMPERATURE")
+            weather_metric("4.8", "m/s", "WIND")
+            weather_metric("76", "%", "HUMIDITY")
+
+        # Footer
+        with ui.row().classes("weather-footer"):
+            ui.label("FNL / Latest available data").classes("weather-source")
+            ui.button("最新データを取得", icon="refresh", on_click=dialog_latest_weather).props(
+                "unelevated no-caps"
+            ).classes("weather-refresh-button")
+
+def weather_metric(value: str, unit: str, label: str):
+    with ui.column().classes("weather-metric"):
+        with ui.row().classes("items-baseline gap-1"):
+            ui.label(value).classes("weather-metric-value")
+            ui.label(unit).classes("weather-metric-unit")
+        ui.label(label).classes("weather-metric-label")
+
+def altitude_weather_card():
+    with ui.card().classes("w-full altitude-card"):
+
+        # Header
+        with ui.row().classes("altitude-card-header"):
+            with ui.column().classes("gap-0"):
+                ui.label("ATMOSPHERIC PROFILE").classes("altitude-eyebrow")
+                ui.label("高度別の気象データ").classes("altitude-title")
+
+            ui.icon("analytics").classes("altitude-icon")
+
+        ui.label("高度を選択して気象状態を確認できます。").classes("altitude-description")
+
+        # Altitude selector
+        with ui.row().classes("altitude-selector-row"):
+            with ui.column().classes("altitude-selector"):
+                ui.label("ALTITUDE").classes("altitude-selector-label")
+                ui.select([0, 500, 1000, 1500, 2000, 3000, 5000], value=1000).props(
+                    "outlined dense"
+                ).classes("w-full")
+
+            ui.label("m").classes("altitude-unit")
+
+        # Action
+        ui.button("気象データを表示", icon="analytics").props("unelevated no-caps").classes(
+            "altitude-action-button"
+        )
 
 def table_page():
     with ui.column().classes("page-content"):
         page_header("LOCATIONS", "演習場一覧")
 
-        # =========================================================
-        # 国内射場
-        # =========================================================
         domestic_rows = [
             {"code": "Y", "loc": "矢臼別演習場", "lat": 43.2997, "lon": 144.9873},
             {"code": "K", "loc": "上富良野演習場", "lat": 43.4230, "lon": 142.4800},
@@ -114,237 +147,85 @@ def table_page():
             {"code": "S", "loc": "防衛装備庁下北試験場", "lat": 41.3050, "lon": 141.3070},
         ]
 
-        # =========================================================
-        # 国外射場
-        # ※ 実際に使用する場所に置き換えてください
-        # =========================================================
         overseas_rows = [
-            {
-                "code": "YPG",
-                "loc": "Yuma Proving Ground",
-                "country": "USA",
-                "lat": 32.8600,
-                "lon": -114.4000,
-            },
-            {
-                "code": "KOF",
-                "loc": "Kofa Range",
-                "country": "USA",
-                "lat": 33.0000,
-                "lon": -114.0000,
-            },
+            {"code": "YPG", "loc": "Yuma Proving Ground", "country": "USA", "lat": 32.8600, "lon": -114.4000},
+            {"code": "KOF", "loc": "Kofa Range", "country": "USA", "lat": 33.0000, "lon": -114.0000},
         ]
 
-        # =========================================================
-        # 共通テーブル生成
-        # =========================================================
         def create_range_table(rows, overseas=False):
-
             columns = [
-                {
-                    "name": "loc",
-                    "label": "場所",
-                    "field": "loc",
-                    "align": "left",
-                },
-                {
-                    "name": "menu",
-                    "label": "",
-                    "field": "menu",
-                    "style": "width: 48px",
-                    "align": "center",
-                },
+                {"name": "loc", "label": "場所", "field": "loc", "align": "left"},
+                {"name": "menu", "label": "", "field": "menu", "style": "width: 48px", "align": "center"},
             ]
-
-            table = ui.table(
-                columns=columns,
-                rows=rows,
-                row_key="code",
-            ).props(
+            table = ui.table(columns=columns, rows=rows, row_key="code").props(
                 "flat bordered hide-header"
-            ).classes(
-                "w-full glass-table"
-            )
+            ).classes("w-full glass-table")
 
             async def row_clicked(e):
                 await dialog_latest_weather()
 
             def open_map(row):
-                ui.navigate.to(
-                    f'/map/{row["lat"]}/{row["lon"]}'
-                )
+                ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
 
             table.on("row-click", row_clicked)
 
-            # -----------------------------------------------------
-            # 場所名 + 国名 + 緯度経度
-            # -----------------------------------------------------
             with table.add_slot("body-cell-loc", r'''
-                <q-td
-                    :props="props"
-                    class="range-table-location"
-                >
+                <q-td :props="props" class="range-table-location">
                     <div class="range-row-content">
-
-                        <div class="range-name">
-                            {{ props.row.loc }}
-                        </div>
-
-                        <div
-                            v-if="props.row.country"
-                            class="range-country"
-                        >
-                            {{ props.row.country }}
-                        </div>
-
+                        <div class="range-name">{{ props.row.loc }}</div>
+                        <div v-if="props.row.country" class="range-country">{{ props.row.country }}</div>
                         <div class="range-coordinates">
-                            <span>
-                                北緯 {{ props.row.lat.toFixed(4) }}
-                            </span>
-
-                            <span>
-                                東経 {{ props.row.lon.toFixed(4) }}
-                            </span>
+                            <span>北緯 {{ props.row.lat.toFixed(4) }}</span>
+                            <span>東経 {{ props.row.lon.toFixed(4) }}</span>
                         </div>
-
                     </div>
                 </q-td>
             '''):
                 pass
 
-            # -----------------------------------------------------
-            # メニュー
-            # -----------------------------------------------------
             with table.add_slot("body-cell-menu", r'''
-                <q-td
-                    :props="props"
-                    auto-width
-                    class="range-menu-cell"
-                >
-                    <q-btn
-                        flat
-                        round
-                        dense
-                        icon="more_vert"
-                        class="range-menu-button"
-                        @click.stop="$parent.$emit(
-                            'menu-click',
-                            props.row
-                        )"
-                    >
-
-                        <q-menu
-                            class="glass-menu"
-                            :offset="[0, -24]"
-                        >
+                <q-td :props="props" auto-width class="range-menu-cell">
+                    <q-btn flat round dense icon="more_vert" class="range-menu-button"
+                        @click.stop="$parent.$emit('menu-click', props.row)">
+                        <q-menu class="glass-menu" :offset="[0, -24]">
                             <q-list style="min-width: 180px">
-
-                                <q-item
-                                    clickable
-                                    v-close-popup
-                                    @click="$parent.$emit(
-                                        'map-click',
-                                        props.row
-                                    )"
-                                >
-                                    <q-item-section avatar>
-                                        <q-icon name="map"/>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                        地図を表示
-                                    </q-item-section>
+                                <q-item clickable v-close-popup
+                                    @click="$parent.$emit('map-click', props.row)">
+                                    <q-item-section avatar><q-icon name="map"/></q-item-section>
+                                    <q-item-section>地図を表示</q-item-section>
                                 </q-item>
-
-                                <q-item
-                                    clickable
-                                    v-close-popup
-                                    @click="$parent.$emit(
-                                        'detail-click',
-                                        props.row
-                                    )"
-                                >
-                                    <q-item-section avatar>
-                                        <q-icon name="info"/>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                        詳細
-                                    </q-item-section>
+                                <q-item clickable v-close-popup
+                                    @click="$parent.$emit('detail-click', props.row)">
+                                    <q-item-section avatar><q-icon name="info"/></q-item-section>
+                                    <q-item-section>詳細</q-item-section>
                                 </q-item>
-
-                                <q-item
-                                    clickable
-                                    v-close-popup
-                                    @click="$parent.$emit(
-                                        'favorite-click',
-                                        props.row
-                                    )"
-                                >
-                                    <q-item-section avatar>
-                                        <q-icon name="star"/>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                        お気に入り
-                                    </q-item-section>
+                                <q-item clickable v-close-popup
+                                    @click="$parent.$emit('favorite-click', props.row)">
+                                    <q-item-section avatar><q-icon name="star"/></q-item-section>
+                                    <q-item-section>お気に入り</q-item-section>
                                 </q-item>
-
                             </q-list>
                         </q-menu>
-
                     </q-btn>
                 </q-td>
             '''):
                 pass
 
-            table.on(
-                "map-click",
-                lambda e: open_map(e.args)
-            )
-
+            table.on("map-click", lambda e: open_map(e.args))
             table.on("menu-click", None)
-
-            table.on(
-                "detail-click",
-                lambda e: ui.notify(
-                    f'詳細: {e.args["loc"]}',
-                    position="top"
-                )
-            )
-
-            table.on(
-                "favorite-click",
-                lambda e: ui.notify(
-                    f'お気に入り: {e.args["loc"]}',
-                    position="top"
-                )
-            )
-
+            table.on("detail-click", lambda e: ui.notify(f'詳細: {e.args["loc"]}', position="top"))
+            table.on("favorite-click", lambda e: ui.notify(f'お気に入り: {e.args["loc"]}', position="top"))
             return table
 
-        # =========================================================
-        # 国内
-        # =========================================================
-        with ui.column().classes("range-section"):
-            with ui.row().classes("range-section-title"):
-                ui.label("DOMESTIC")
-                ui.label("国内射場")
-
-            create_range_table(domestic_rows)
-
-        # =========================================================
-        # 国外
-        # =========================================================
-        with ui.column().classes("range-section"):
-            with ui.row().classes("range-section-title"):
-                ui.label("OVERSEAS")
-                ui.label("国外射場")
-
-            create_range_table(
-                overseas_rows,
-                overseas=True,
-            )
+        for title, subtitle, rows in [
+            ("DOMESTIC", "国内射場", domestic_rows),
+            ("OVERSEAS", "国外射場", overseas_rows),
+        ]:
+            with ui.column().classes("range-section"):
+                with ui.row().classes("range-section-title"):
+                    ui.label(title)
+                    ui.label(subtitle)
+                create_range_table(rows)
 
     floating_nav("table")
 
@@ -524,10 +405,6 @@ SETTINGS = {
     },
 }
 
-
-
-
-
 # =========================================================
 # Storage
 # =========================================================
@@ -567,7 +444,6 @@ def apply_setting(key: str, value: str):
 
         if handler:
             handler(value)
-
 
 # =========================================================
 # Setting Dialog
@@ -609,7 +485,6 @@ def open_setting_dialog(key: str, on_changed=None):
                         check.set_visibility(value == current)
 
     dialog.open()
-
 
 # =========================================================
 # Settings Table
@@ -709,27 +584,9 @@ def settings_page():
 
     floating_nav("settings")
 
-
-def settings_item(key: str):
-    setting = SETTINGS[key]
-
-    with ui.element("div").classes("settings-item") as item:
-        # Left
-        with ui.element("div").classes("settings-item-left"):
-            ui.icon(setting["icon"]).classes("settings-item-icon")
-            ui.label(setting["title"]).classes("settings-item-title")
-
-        # Right
-        with ui.element("div").classes("settings-item-right"):
-            ui.label(get_setting_label(key)).classes("settings-item-value")
-
-            if setting.get("right_arrow", True):
-                ui.icon("chevron_right").classes("settings-item-arrow")
-
-        if setting["options"]:
-            item.on("click", lambda: open_setting_dialog(key))
-
-
+# =========================================================
+# Appearance
+# =========================================================
 
 BODY_CLASSES = [
     "theme-default",
@@ -764,7 +621,6 @@ def apply_appearance(value: str):
         case "olive_dark":
             dark.enable()
             ui.query("body").classes(add="theme-olive-dark")
-
 
 theme = app.storage.user.get("appearance", "system")
 apply_appearance(theme)

@@ -26,7 +26,7 @@ UI_COLORS = {
     },
 }
 
-THEME_COLORS = {
+_THEME_COLORS = {
     "default": {
         "background": "#FFFFFF",
         "nav_bg_light": "rgba(255, 255, 255, .60)",
