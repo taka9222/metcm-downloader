@@ -123,8 +123,7 @@ def css_home_dashboard():
     border-radius: 16px;
     background: rgba(245, 248, 250, 0.88);
     border: 1px solid rgba(45, 65, 80, 0.13);
-    box-shadow:
-        0 8px 28px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     transition:
@@ -135,8 +134,7 @@ def css_home_dashboard():
 .body--dark .weather-card {
     background: rgba(22, 28, 34, 0.88);
     border-color: rgba(255, 255, 255, 0.13);
-    box-shadow:
-        0 10px 32px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
 }
 
 
@@ -321,8 +319,7 @@ def css_home_dashboard():
     border-radius: 16px;
     background: rgba(245, 248, 250, 0.88);
     border: 1px solid rgba(45, 65, 80, 0.13);
-    box-shadow:
-        0 8px 28px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
 }
@@ -330,10 +327,8 @@ def css_home_dashboard():
 .body--dark .altitude-card {
     background: rgba(22, 28, 34, 0.88);
     border-color: rgba(255, 255, 255, 0.13);
-    box-shadow:
-        0 10px 32px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
 }
-
 
 /* =========================================================
    Atmospheric Header
@@ -386,7 +381,6 @@ def css_home_dashboard():
     color: rgba(215, 225, 232, 0.52);
 }
 
-
 /* =========================================================
    Altitude Selector
    ========================================================= */
@@ -424,7 +418,6 @@ def css_home_dashboard():
 .body--dark .altitude-unit {
     color: rgba(215, 225, 232, 0.52);
 }
-
 
 /* =========================================================
    Altitude Action

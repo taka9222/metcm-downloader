@@ -17,6 +17,7 @@ def page_header(kicker: str, title: str):
         with ui.column().classes("page-header-title-group"):
             ui.label(title).classes("page-header-title")
             ui.element("div").classes("page-header-line")
+
  
 def home_page():
     with ui.column().classes("page-content home-page"):
@@ -36,6 +37,7 @@ def home_page():
         altitude_weather_card()
 
     floating_nav("home")
+
 
 def location_card(
     eyebrow: str, title: str, region: str, coordinate: str, image: str, recent: bool = False
@@ -64,11 +66,13 @@ def location_card(
                 "location-gps-button"
             )
 
+
 def section_header(eyebrow: str, title: str):
     with ui.column().classes("dashboard-section-header"):
         ui.label(eyebrow).classes("dashboard-section-eyebrow")
         ui.label(title).classes("dashboard-section-title")
         ui.element("div").classes("dashboard-section-line")
+
 
 def weather_card():
     with ui.card().classes("w-full weather-card"):
@@ -266,25 +270,25 @@ def set_map_type(map_element, map_type: str):
     )
 
 def map_page(lat: float, lon: float):
-    with ui.column().classes("page-content map-page"):
+    with ui.element("div").classes("map-page"):
 
-        page_header("MAP", "地図")
+        map_element = ui.leaflet(center=(lat, lon), zoom=10).classes("map-view")
+        set_map_type(map_element, get_setting("map_type"))
 
-        with ui.element("div").classes("map-wrapper"):
-            map_element = ui.leaflet(center=(lat, lon),zoom=10).classes("map-view")
-            set_map_type(map_element, get_setting("map_type"))
+        # Floating Back Button
+        with ui.element("div").classes("map-back-button"):
+            ui.button(icon="arrow_back", on_click=lambda: ui.navigate.back()).props("flat round")
 
-            # 地図上の情報
-            with ui.element("div").classes("map-overlay"):
-                ui.label("CURRENT LOCATION").classes("map-overlay-label")
-                ui.label( f"{lat:.4f}, {lon:.4f}").classes( "map-overlay-coordinate")
+        # Current Location Overlay
+        with ui.element("div").classes("map-overlay"):
+            ui.label("CURRENT LOCATION").classes("map-overlay-label")
+            ui.label(f"{lat:.4f}, {lon:.4f}").classes("map-overlay-coordinate")
 
-        # ---------------------------------------------------------
-        # Location information
-        # ---------------------------------------------------------
+        # Location Information
         with ui.card().classes("map-info-card"):
             with ui.row().classes("map-info-header"):
                 ui.icon("location_on").classes("map-location-icon")
+
                 with ui.column().classes("gap-0"):
                     ui.label("LOCATION").classes("map-info-eyebrow")
                     ui.label("表示地点").classes("map-info-title")
@@ -294,15 +298,11 @@ def map_page(lat: float, lon: float):
             with ui.row().classes("map-coordinate-row"):
                 with ui.column().classes("map-coordinate-item"):
                     ui.label("LATITUDE").classes("map-coordinate-label")
-                    ui.label( f"{lat:.4f}°").classes("map-coordinate-value")
+                    ui.label(f"{lat:.4f}°").classes("map-coordinate-value")
+
                 with ui.column().classes("map-coordinate-item"):
                     ui.label("LONGITUDE").classes("map-coordinate-label")
                     ui.label(f"{lon:.4f}°").classes("map-coordinate-value")
-
-        # floating navigationとの重なり防止
-        ui.element("div").classes("map-bottom-space")
-
-    floating_nav("table")
 
 
 def apply_map_type():
@@ -354,7 +354,7 @@ SETTINGS = {
         "title": "地図の種類",
         "options": {
             "standard": "デフォルト",
-            "satellite": "航空写真e",
+            "satellite": "航空写真",
             "terrain": "地形",
         },
         "default": "standard",
