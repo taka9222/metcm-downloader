@@ -11,7 +11,7 @@ from components.result import _show_atmospheric_layers
 
 FNL_BASE_URL = ("https://osdf-director.osg-htc.org/ncar/gdex/d083002/grib2")
 FNL_HOURS = (0, 6, 12, 18)
-DOWNLOAD_DIR = Path("downloads")
+DOWNLOAD_DIR = Path("/tmp/fnl")
 
 
 def make_fnl_url(dt: datetime) -> str:
@@ -30,33 +30,38 @@ def check_exists(url: str) -> bool:
         return False
 
 
-def download_fnl(url: str, output_dir: Path = DOWNLOAD_DIR) -> Path:
-    """FNL GRIB2をダウンロードする."""
-    output_dir.mkdir(parents=True, exist_ok=True)
+def download_fnl(url: str) -> Path:
+    """FNL GRIB2をダウンロードしてPathを返す."""
+    DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-    filename = os.path.basename(url)
-    output_path = output_dir / filename
-    temp_path = output_path.with_suffix(output_path.suffix + ".part")
+    output_path = DOWNLOAD_DIR / os.path.basename(url)
+    temp_path = output_path.with_suffix(".grib2.part")
 
-    if output_path.exists():
+    if output_path.exists() and output_path.stat().st_size > 0:
+        print(f"Using cached file: {output_path}")
         return output_path
 
     temp_path.unlink(missing_ok=True)
 
+    print(f"Downloading: {url}")
+    print(f"Output: {output_path}")
+
     opener = build_opener()
 
     try:
-        with opener.open(url) as infile, temp_path.open("wb") as outfile:
-            while chunk := infile.read(1024 * 1024):
-                outfile.write(chunk)
+        with opener.open(url, timeout=60) as infile:
+            with temp_path.open("wb") as outfile:
+                while chunk := infile.read(1024 * 1024):
+                    outfile.write(chunk)
 
-        # 完全にダウンロードできた後で正式なファイル名にする
         temp_path.replace(output_path)
 
     except Exception:
-        # 失敗した場合は不完全なファイルを残さない
         temp_path.unlink(missing_ok=True)
         raise
+
+    print(f"Download complete: {output_path}")
+    print(f"File size: {output_path.stat().st_size:,} bytes")
 
     return output_path
 
