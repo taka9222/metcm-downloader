@@ -59,8 +59,8 @@ async def dialog_latest_weather(lat: float, lon: float):
             f'気象データの取得に失敗しました: {e}',
             color='negative',
         )
-        return
         traceback.print_exc()
+        return
 
     loading_dialog.close()
 
