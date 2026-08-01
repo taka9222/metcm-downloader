@@ -96,7 +96,8 @@ def weather_card():
         # Footer
         with ui.row().classes("weather-footer"):
             ui.label("FNL / Latest available data").classes("weather-source")
-            ui.button("最新データを取得", icon="refresh", on_click=dialog_latest_weather).props(
+            ui.button("最新データを取得", icon="refresh", 
+                      on_click=lambda: dialog_latest_weather(35.0, 135.0),).props(
                 "unelevated no-caps"
             ).classes("weather-refresh-button")
 
@@ -166,7 +167,8 @@ def table_page():
             ).classes("w-full glass-table")
 
             async def row_clicked(e):
-                await dialog_latest_weather()
+                row = e.args[1]
+                await dialog_latest_weather(row["lat"], row["lon"])
 
             def open_map(row):
                 ui.navigate.to(f'/map/{row["lat"]}/{row["lon"]}')
@@ -306,6 +308,7 @@ def map_page(lat: float, lon: float):
 
 
 def apply_map_type():
+    # これはcallback用の関数なのでmep_elementが定義されていなくてもOK
     set_map_type(map_element, get_setting("map_type"))
 
 # =========================================================
@@ -337,6 +340,12 @@ SETTINGS = {
         "title": "データソース*",
         "options": {"fnl": "FNL"},
         "default": "fnl",
+    },
+    "maximum_zone": {
+        "icon": "cloud",
+        "title": "最大気層*",
+        "options": {"8": "8", "10": "10", "12": "12", "14": "14", "16": "16", "18": "18"},
+        "default": "16",
     },
     "weather_update": {
         "icon": "update",
@@ -572,7 +581,7 @@ def settings_page():
         page_header("SETTINGS", "設定")
         ui.label("*は現在未実装")
         settings_section("GENERAL", "一般", ["appearance", "unit"])
-        settings_section("WEATHER", "気象情報", ["weather_source", "weather_update"])
+        settings_section("WEATHER", "気象情報", ["weather_source", "maximum_zone", "weather_update"])
         settings_section("MAP", "地図", ["map_type", "map_zoom"])
         settings_section(
             "LOCATIONS", "演習場", ["domestic_locations", "foreign_locations", "favorites"],

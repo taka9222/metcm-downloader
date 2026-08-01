@@ -7,6 +7,9 @@ from static.css.table import css_table
 from static.css.table_menu import css_table_menu
 from static.css.map import css_map
 from static.css.loading_panel import css_loading_panel
+from static.css.dialog import css_dialog
+from static.css.search_result import css_search_result
+from static.css.result import css_result
 from static.css.settings import css_settings
 from static.css.floating_nav import css_floating_nav
 
@@ -26,6 +29,9 @@ def add_css():
         {css_table_menu()}
         {css_map()}
         {css_loading_panel()}
+        {css_dialog()}
+        {css_search_result()}
+        {css_result()}
         {css_settings()}
         {css_floating_nav()}
         </style>

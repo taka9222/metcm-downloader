@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
+import time
 
 
 BASE_URL = (
@@ -8,14 +9,27 @@ BASE_URL = (
 )
 
 
-def check_exists(url):
-    """ファイル存在確認（本体は取得しない）"""
-    try:
-        req = Request(url, method="HEAD")
-        with urlopen(req, timeout=10) as response:
-            return response.status == 200
-    except (HTTPError, URLError, TimeoutError):
-        return False
+def check_exists(url: str, timeout: float = 1.0, retries: int = 3) -> bool:
+    """ファイルの存在確認（本体は取得しない）"""
+    for attempt in range(retries + 1):
+        try:
+            req = Request(url, method="HEAD")
+            with urlopen(req, timeout=timeout) as response:
+                return response.status == 200
+
+        except HTTPError as e:
+            print(e.code, url)
+            # 404などはリトライせず「存在しない」と判定
+            if e.code == 404:
+                return False
+
+        except (URLError, TimeoutError):
+            pass
+
+        if attempt < retries:
+            time.sleep(0.2)
+
+    return False
 
 
 def generate_fnl_url(dt):
@@ -34,12 +48,13 @@ def get_latest_fnl():
     now = datetime.now(timezone.utc)
     # 6時間単位に丸める
     hour = (now.hour // 6) * 6
-    t = now.replace(hour=hour, minute=0, second=0, microsecond=0
-    )
+    t = now.replace(hour=hour, minute=0, second=0, microsecond=0)
+    t -= timedelta(hours=6)
     # 最大7日探索
     for _ in range(28):
         url = generate_fnl_url(t)
         if check_exists(url):
+            print(url)
             return {"time": t, "url": url, "filename": url.split("/")[-1]}
         t -= timedelta(hours=6)
     return None
