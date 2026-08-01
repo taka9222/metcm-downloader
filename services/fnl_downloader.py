@@ -248,6 +248,8 @@ def _add_fnl_result_row(
             ui.label('NOT AVAILABLE').classes('fnl-unavailable')
 
 
+import pygrib
+
 async def start_download(result: dict, dialog, lat: float, lon: float):
     dialog.close()
 
@@ -304,6 +306,10 @@ async def start_download(result: dict, dialog, lat: float, lon: float):
             ).classes('dialog-age')
 
     await asyncio.sleep(0)
+
+    grbs = pygrib.open(file)
+    for idx, grb in enumerate(grbs):
+        debug_log(f"{idx}: {grb.name}")
 
     try:
         layers = await asyncio.to_thread(
