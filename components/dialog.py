@@ -1,6 +1,7 @@
 from nicegui import ui
 from datetime import datetime, timezone
 import asyncio
+import traceback
 
 from services.fnl_fetcher import get_latest_fnl
 from services.fnl_downloader import start_download, search_by_date
@@ -12,7 +13,6 @@ def hours_ago(t: datetime) -> float:
 
 
 async def dialog_latest_weather_old(lat: float, lon: float):
-
     loading = ui.dialog().props(
         'transition-show="fade" '
         'transition-hide="fade"'
@@ -60,6 +60,7 @@ async def dialog_latest_weather(lat: float, lon: float):
             color='negative',
         )
         return
+        traceback.print_exc()
 
     loading_dialog.close()
 
