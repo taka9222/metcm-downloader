@@ -14,6 +14,12 @@ FNL_HOURS = (0, 6, 12, 18)
 DOWNLOAD_DIR = Path("/tmp/fnl")
 
 
+def debug_log(message: str) -> None: 
+    """Render LogsとブラウザのConsoleの両方へログを出力する.""" 
+    print(message, flush=True) 
+    ui.run_javascript(f"console.log({message!r})")
+
+
 def make_fnl_url(dt: datetime) -> str:
     """UTC日時からFNL GRIB2のURLを生成する."""
     dt = dt.astimezone(timezone.utc)
@@ -38,13 +44,13 @@ def download_fnl(url: str) -> Path:
     temp_path = output_path.with_suffix(".grib2.part")
 
     if output_path.exists() and output_path.stat().st_size > 0:
-        print(f"Using cached file: {output_path}")
+        debug_log(f"Using cached file: {output_path}")
         return output_path
 
     temp_path.unlink(missing_ok=True)
 
-    print(f"Downloading: {url}")
-    print(f"Output: {output_path}")
+    debug_log(f"Downloading: {url}")
+    debug_log(f"Output: {output_path}")
 
     opener = build_opener()
 
@@ -57,11 +63,12 @@ def download_fnl(url: str) -> Path:
         temp_path.replace(output_path)
 
     except Exception:
+        debug_log(f"Download failed: {type(e).__name__}: {e}")
         temp_path.unlink(missing_ok=True)
         raise
 
-    print(f"Download complete: {output_path}")
-    print(f"File size: {output_path.stat().st_size:,} bytes")
+    debug_log(f"Download complete: {output_path}") 
+    debug_log(f"File size: {output_path.stat().st_size:,} bytes")
 
     return output_path
 
