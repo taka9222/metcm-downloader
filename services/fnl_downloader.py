@@ -60,6 +60,7 @@ def download_fnl(url: str) -> Path:
         temp_path.unlink(missing_ok=True)
         raise
 
+    ui.notify(output_path, position="top")
     print(f"Download complete: {output_path}")
     print(f"File size: {output_path.stat().st_size:,} bytes")
 
