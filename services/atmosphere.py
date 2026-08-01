@@ -276,7 +276,8 @@ def interpolate_at_point(
     if target_lon < spline.get_knots()[1][0] or target_lon > spline.get_knots()[1][-1]:
         return None
 
-    return float(spline.ev(latitude, target_lon))
+    result = spline.ev(latitude, target_lon)
+    return float(np.asarray(result).item())
 
 
 # ============================================================
@@ -362,7 +363,7 @@ def extract_pressure_levels(
             virtual_temperature = float(
                 comp_virtual_temperature(
                     np.array([values["t"]]), np.array([values["q"]]),
-                )[0]
+                ).item()
             )
 
         density = None
@@ -370,7 +371,7 @@ def extract_pressure_levels(
             density = float(
                 comp_air_den(
                     np.array([virtual_temperature]), np.array([level]),
-                )[0]
+                ).item()
             )
 
         result.append(PressureLevelData(
@@ -598,6 +599,9 @@ def get_atmospheric_layers(
     sample_interval: float = 50.0, maximum_zone: int | None = None, neighbor_radius: int = 2,
 ) -> list[dict]:
     """GRIB2から指定地点の26気層の気象データを取得する."""
+
+    latitude = float(np.asarray(latitude).item())
+    longitude = float(np.asarray(longitude).item())
 
     if maximum_zone is not None and not 1 <= maximum_zone <= len(ATMOSPHERIC_ZONES):
         raise ValueError(f"maximum_zone must be between 1 and {len(ATMOSPHERIC_ZONES)}")
