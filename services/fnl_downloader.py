@@ -60,7 +60,6 @@ def download_fnl(url: str) -> Path:
         temp_path.unlink(missing_ok=True)
         raise
 
-    ui.notify(output_path, position="top")
     print(f"Download complete: {output_path}")
     print(f"File size: {output_path.stat().st_size:,} bytes")
 
@@ -310,7 +309,7 @@ async def start_download(result: dict, dialog, lat: float, lon: float):
 
     except Exception as e:
         loading_dialog.close()
-        ui.notify(f'気象データの解析に失敗しました: {e}', color='negative', position="top")
+        ui.notify(f'気象データの解析に失敗しました: {file}, {e}', color='negative', position="top")
         return
 
     loading_dialog.close()
