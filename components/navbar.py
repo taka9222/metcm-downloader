@@ -43,20 +43,14 @@ def floating_nav(current: str):
             )
 
     # 初期状態
-    ui.run_javascript(f"""
-        requestAnimationFrame(() => {{
+    def update_nav_position():
+        ui.run_javascript(f"""
             const nav = document.querySelector('.floating-nav');
 
             if (!nav) return;
 
-            nav.style.setProperty(
-                '--nav-index',
-                '{current_index}'
-            );
+            nav.style.setProperty('--nav-index', '{current_index}');
+            nav.style.setProperty('--nav-count', '{len(tabs)}');
+        """)
 
-            nav.style.setProperty(
-                '--nav-count',
-                '{len(tabs)}'
-            );
-        }});
-    """)
+    ui.timer(0, update_nav_position, once=True)

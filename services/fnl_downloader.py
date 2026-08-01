@@ -307,18 +307,9 @@ async def start_download(result: dict, dialog, lat: float, lon: float):
 
     await asyncio.sleep(0)
 
-    grbs = pygrib.open(file)
-    for idx, grb in enumerate(grbs):
-        debug_log(f"{idx}: {grb.name}")
-
     try:
-        layers = await asyncio.to_thread(
-            get_atmospheric_layers,
-            file,
-            lat,
-            lon,
-            maximum_zone=16,
-        )
+        layers = get_atmospheric_layers(file, lat, lon, maximum_zone=16)
+        # layers = await asyncio.to_thread(get_atmospheric_layers, file, lat, lon, maximum_zone=16)
 
     except Exception as e:
         loading_dialog.close()
@@ -327,9 +318,4 @@ async def start_download(result: dict, dialog, lat: float, lon: float):
 
     loading_dialog.close()
 
-    _show_atmospheric_layers(
-        layers,
-        result,
-        lat,
-        lon,
-    )
+    _show_atmospheric_layers(layers, result, lat, lon)
