@@ -6,7 +6,7 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, build_opener, urlopen
 
-from .atmosphere import get_atmospheric_layers
+from services.atmosphere import get_atmospheric_layers
 from components.result import _show_atmospheric_layers
 
 FNL_BASE_URL = ("https://osdf-director.osg-htc.org/ncar/gdex/d083002/grib2")
