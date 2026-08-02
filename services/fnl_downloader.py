@@ -1,11 +1,10 @@
-import os
 import asyncio
 from nicegui import ui
-from datetime import date, datetime, timezone
+from datetime import date
 
 from services.atmosphere import get_atmospheric_layers
-from services.fnl.client import make_fnl_url, check_exists
 from services.fnl.downloader import download_fnl
+from services.fnl.search import find_fnl_files
 from components.result import _show_atmospheric_layers
 
 FNL_HOURS = (0, 6, 12, 18)
@@ -80,34 +79,11 @@ async def _search_fnl_date(
     await asyncio.sleep(0)
 
     try:
-        results = await asyncio.to_thread(
-            _find_fnl_files,
-            selected_date,
-        )
+        results = await asyncio.to_thread( find_fnl_files, selected_date)
     finally:
         loading_dialog.close()
 
-    _show_fnl_search_results(
-        results,
-        selected_date,
-        lat,
-        lon,
-    )
-
-
-def _find_fnl_files(selected_date: date) -> list[dict]:
-    """指定日の00/06/12/18 UTCのFNLファイルを検索する."""
-    results = []
-
-    for hour in FNL_HOURS:
-        dt = datetime(selected_date.year, selected_date.month, selected_date.day, hour, tzinfo=timezone.utc)
-        url = make_fnl_url(dt)
-
-        results.append({
-            'time': dt, 'url': url, 'filename': os.path.basename(url), 'exists': check_exists(url),
-        })
-
-    return results
+    _show_fnl_search_results(results, selected_date, lat, lon)
 
 
 def _show_fnl_search_results(
@@ -172,7 +148,7 @@ def _add_fnl_result_row(
 
         else:
             ui.label('NOT AVAILABLE').classes('fnl-unavailable')
-            
+
 
 async def start_download(result: dict, dialog, lat: float, lon: float):
     dialog.close()
@@ -185,7 +161,7 @@ async def start_download(result: dict, dialog, lat: float, lon: float):
 
             ui.spinner('dots').classes('text-primary')
 
-            ui.label(result['filename']).classes('dialog-filename')
+            ui.label(result.filename).classes('dialog-filename')
             ui.label(
                 'FNL GRIB2データをダウンロードしています'
             ).classes('dialog-age')
@@ -196,7 +172,7 @@ async def start_download(result: dict, dialog, lat: float, lon: float):
     try:
         file = await asyncio.to_thread(
             download_fnl,
-            result['url'],
+            result.url,
         )
 
     except Exception as e:

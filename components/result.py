@@ -2,7 +2,7 @@ from nicegui import ui
 
 def _show_atmospheric_layers(
     layers: list[dict],
-    source: dict,
+    source: dict,  # dataClass
     lat: float,
     lon: float,
 ):
@@ -95,34 +95,22 @@ def _show_atmospheric_layers(
             ui.separator().classes('dialog-separator')
 
             with ui.row().classes('atmosphere-meta'):
-                ui.label(
-                    f'LAT {lat:.4f}'
-                ).classes('atmosphere-location')
 
-                ui.label(
-                    f'LON {lon:.4f}'
-                ).classes('atmosphere-location')
+                ui.label(f'LAT {lat:.4f}').classes('atmosphere-location')
+                ui.label(f'LON {lon:.4f}').classes('atmosphere-location')
 
-            ui.label(
-                source['time'].strftime('%Y年 %m月 %d日 %H00 UTC')
-            ).classes('dialog-age')
+            ui.label(source.time.strftime('%Y年 %m月 %d日 %H00 UTC')).classes('dialog-age')
 
             # -------------------------------------------------
             # Table
             # -------------------------------------------------
 
-            ui.table(
-                columns=columns,
-                rows=rows,
-                row_key='zone',
-            ).classes('atmosphere-table')
+            ui.table(columns=columns, rows=rows, row_key='zone').classes('atmosphere-table')
 
             ui.space()
 
             with ui.row().classes('dialog-actions'):
-                ui.button(
-                    '閉じる',
-                    on_click=dialog.close,
-                ).props('flat').classes('dialog-cancel-button')
+
+                ui.button('閉じる', on_click=dialog.close).props('flat').classes('dialog-cancel-button')
 
     dialog.open()
