@@ -74,10 +74,10 @@ def css_common():
     max-width: 1300px;
     margin: 0 auto;
 
-    padding: clamp(12px, 2vw, 28px)
-             clamp(8px, 2vw, 28px)
+    padding: clamp(8px, 1vw, 20px)
+             clamp(6px, 1vw, 20px)
              calc(
-                 clamp(24px, 4vw, 48px)
+                 clamp(12px, 2vw, 24px)
                  + 100px
                  + env(safe-area-inset-bottom)
              );
