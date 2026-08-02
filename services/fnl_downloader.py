@@ -27,19 +27,10 @@ def search_by_date(parent_dialog, lat: float, lon: float):
             ui.space()
 
             with ui.row().classes('dialog-actions'):
-                ui.button(
-                    'キャンセル',
-                    on_click=dialog.close,
-                ).props('flat').classes('dialog-cancel-button')
+                ui.button('キャンセル', on_click=dialog.close).props('flat').classes('dialog-cancel-button')
 
                 ui.button(
-                    '検索',
-                    on_click=lambda: _search_fnl_date(
-                        date_input.value,
-                        dialog,
-                        lat,
-                        lon,
-                    ),
+                    '検索', on_click=lambda: _search_fnl_date(date_input.value, dialog, lat, lon),
                 ).props('unelevated').classes('dialog-primary-button')
 
     dialog.open()
@@ -133,14 +124,11 @@ def _add_fnl_result_row(
     dt = result.time
 
     with ui.row().classes('fnl-result-row'):
-
         with ui.column().classes('fnl-result-info'):
-
             ui.label(dt.strftime('%H00 UTC')).classes('fnl-result-time')
             ui.label(result.filename).classes('fnl-result-filename')
 
         if available:
-
             ui.label('AVAILABLE').classes('fnl-available')
             ui.button(
                 'ダウンロード', on_click=lambda r=result: start_download(r, dialog, lat, lon)
@@ -150,7 +138,7 @@ def _add_fnl_result_row(
             ui.label('NOT AVAILABLE').classes('fnl-unavailable')
 
 
-async def start_download(result: dict, dialog, lat: float, lon: float):
+async def start_download(result: dict, dialog, lat: float, lon: float):  # result:dataClass
     dialog.close()
 
     with ui.dialog() as loading_dialog:
@@ -158,29 +146,19 @@ async def start_download(result: dict, dialog, lat: float, lon: float):
             ui.label('DOWNLOAD').classes('dialog-eyebrow')
             ui.label('データを取得中').classes('dialog-title')
             ui.separator().classes('dialog-separator')
-
             ui.spinner('dots').classes('text-primary')
-
             ui.label(result.filename).classes('dialog-filename')
-            ui.label(
-                'FNL GRIB2データをダウンロードしています'
-            ).classes('dialog-age')
+            ui.label('FNL GRIB2データをダウンロードしています').classes('dialog-age')
 
     loading_dialog.open()
     await asyncio.sleep(0)
 
     try:
-        file = await asyncio.to_thread(
-            download_fnl,
-            result.url,
-        )
+        file = await asyncio.to_thread(download_fnl, result.url)
 
     except Exception as e:
         loading_dialog.close()
-        ui.notify(
-            f'ダウンロードに失敗しました: {e}',
-            color='negative',
-        )
+        ui.notify(f'ダウンロードに失敗しました: {e}', color='negative')
         return
 
     # ---------------------------------------------------------
@@ -194,21 +172,13 @@ async def start_download(result: dict, dialog, lat: float, lon: float):
             ui.label('ANALYSIS').classes('dialog-eyebrow')
             ui.label('気象データを解析中').classes('dialog-title')
             ui.separator().classes('dialog-separator')
-
             ui.spinner('dots').classes('text-primary')
-
-            ui.label(
-                f'緯度 {lat:.4f} / 経度 {lon:.4f}'
-            ).classes('dialog-time')
-
-            ui.label(
-                '大気層データを計算しています'
-            ).classes('dialog-age')
+            ui.label(f'緯度 {lat:.4f} / 経度 {lon:.4f}').classes('dialog-time')
+            ui.label('気層データを計算しています').classes('dialog-age')
 
     await asyncio.sleep(0)
 
     try:
-        # layers = get_atmospheric_layers(file, lat, lon, maximum_zone=16)
         layers = await asyncio.to_thread(get_atmospheric_layers, file, lat, lon, maximum_zone=16)
 
     except Exception as e:

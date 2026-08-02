@@ -85,8 +85,8 @@ def _dialog_result(result, lat, lon):
             ui.separator().classes('dialog-separator')
 
             # Data
-            timestamp = result["time"].strftime('%Y年 %m月 %d日 %H00 UTC')
-            elapsed = round(hours_ago(result["time"]))
+            timestamp = result.time.strftime('%Y年 %m月 %d日 %H00 UTC')
+            elapsed = round(hours_ago(result.time))
 
             with ui.column().classes('dialog-info'):
                 ui.label('LATEST OBSERVATION').classes('dialog-section-label')
@@ -95,7 +95,7 @@ def _dialog_result(result, lat, lon):
 
                 with ui.row().classes('dialog-file-row'):
                     ui.icon('description').classes('dialog-file-icon')
-                    ui.label(result["filename"]).classes('dialog-filename')
+                    ui.label(result.filename).classes('dialog-filename')
 
             ui.space()
 

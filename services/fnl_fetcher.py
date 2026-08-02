@@ -3,6 +3,8 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 import time
 
+from .fnl.search import FNLFile
+
 
 BASE_URL = (
     "https://osdf-director.osg-htc.org/ncar/gdex/d083002/grib2/"
@@ -55,7 +57,12 @@ def get_latest_fnl():
         url = generate_fnl_url(t)
         if check_exists(url):
             print(url)
-            return {"time": t, "url": url, "filename": url.split("/")[-1]}
+            return FNLFile(
+                time=t,
+                url=url,
+                filename=url.split("/")[-1],
+                exists=True,
+            )
         t -= timedelta(hours=6)
     return None
 
@@ -63,8 +70,8 @@ def get_latest_fnl():
 def main():
     latest = get_latest_fnl()
     if latest:
-        print(latest["filename"])
-        print(latest["url"])
+        print(latest.filename)
+        print(latest.url)
     else:
         print("FNL not found")
 
