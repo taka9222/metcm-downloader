@@ -8,7 +8,7 @@ from pages.locations_map import map_page
 from pages.settings import get_setting, set_setting, get_setting_label
 from components.page_header import page_header
 from components.navbar import floating_nav
-from components.colors import UI_COLORS
+from config.colors import UI_COLORS
 from config.settings import SETTINGS
 from utils.build_info import get_build_number
 
