@@ -501,4 +501,5 @@ def css_home_dashboard():
         width: 100%;
     }
 }
+
 """

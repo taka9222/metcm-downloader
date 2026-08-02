@@ -16,6 +16,7 @@ from pathlib import Path
 import eccodes
 import numpy as np
 from scipy.interpolate import RectBivariateSpline
+np.set_printoptions(precision=3)
 
 
 # ============================================================
@@ -167,6 +168,10 @@ def _build_spline(values: np.ndarray, latitudes: np.ndarray, longitudes: np.ndar
     lat_order = np.argsort(lat)
     lat = lat[lat_order]
     grid = grid[lat_order]
+
+    # print(f"[_build_spline] {lat=}")
+    # print(f"[_build_spline] {lon=}")
+    # print(f"[_build_spline] {grid.flatten()=}")
 
     return RectBivariateSpline(lat, lon, grid, kx=min(3, nlat - 1), ky=min(3, nlon - 1), s=0)
 
@@ -350,10 +355,15 @@ def extract_pressure_levels(
     result = []
 
     for level in levels:
+        
         values = {
             variable: interpolate_at_point(grib_data[variable][level], grid, latitude, longitude)
             for variable in REQUIRED_VARIABLES
         }
+        # values = dict()
+        # for variable in REQUIRED_VARIABLES:
+            # print(f"[extract_pressure_levels] {variable=} {level=}")
+            # values[variable] = interpolate_at_point(grib_data[variable][level], grid, latitude, longitude)
 
         if values["gh"] is None:
             continue
