@@ -6,6 +6,7 @@ from services.atmosphere import get_atmospheric_layers
 from services.fnl.downloader import download_fnl
 from services.fnl.search import find_fnl_files
 from components.result import _show_atmospheric_layers
+from pages.settings import get_setting
 
 FNL_HOURS = (0, 6, 12, 18)
 
@@ -179,7 +180,8 @@ async def start_download(result: dict, dialog, lat: float, lon: float):  # resul
     await asyncio.sleep(0)
 
     try:
-        layers = await asyncio.to_thread(get_atmospheric_layers, file, lat, lon, maximum_zone=16)
+        maximum_zone = int(get_setting("maximum_zone"))
+        layers = await asyncio.to_thread(get_atmospheric_layers, file, lat, lon, maximum_zone=maximum_zone)
 
     except Exception as e:
         loading_dialog.close()

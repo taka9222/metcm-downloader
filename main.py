@@ -227,6 +227,8 @@ ui.sub_pages({
 port = int(os.environ.get("PORT", 8080))
 
 ui.run(
+    title="METCM Downloader",
+    favicon="static/icon-512.png",  # とりあえずPWAアイコン
     host="0.0.0.0",
     port=port,
     storage_secret="6d2740f2fcfc818d68a39f9d6654db89718db917f1b872e4545cf7c9b91f72e3",
