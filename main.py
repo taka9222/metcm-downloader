@@ -10,6 +10,7 @@ from components.page_header import page_header
 from components.navbar import floating_nav
 from components.colors import UI_COLORS
 from config.settings import SETTINGS
+from utils.build_info import get_build_number
 
 
 # =========================================================
@@ -162,6 +163,11 @@ def settings_page():
 
         # Floating Navigation と重ならないように
         ui.element("div").style("height: calc(110px + env(safe-area-inset-bottom));")
+
+        ui.separator()
+
+        with ui.row().classes("w-full"):
+            ui.label(f"Build {get_build_number()}").classes("text-xs text-gray-400")
 
     floating_nav("settings")
 
