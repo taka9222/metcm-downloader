@@ -1,0 +1,98 @@
+SETTINGS = {
+    "appearance": {
+        "icon": "dark_mode",
+        "title": "外観",
+        "options": {
+            "system": "システム設定に従う",
+            "light": "ライト",
+            "dark": "ダーク",
+            "olive":"オリーブドラブ",
+            "olive_dark": "オリーブドラブ (濃)"
+        },
+        "default": "system",
+        "on_change": "apply_appearance",
+    },
+    "unit": {
+        "icon": "straighten",
+        "title": "単位系*",
+        "options": {"metric": "Metric", "imperial": "Imperial"},
+        "default": "metric",
+    },
+    "weather_source": {
+        "icon": "cloud",
+        "title": "データソース*",
+        "options": {"fnl": "FNL"},
+        "default": "fnl",
+    },
+    "maximum_zone": {
+        "icon": "cloud",
+        "title": "最大気層*",
+        "options": {"8": "8", "10": "10", "12": "12", "14": "14", "16": "16", "18": "18"},
+        "default": "16",
+    },
+    "weather_update": {
+        "icon": "update",
+        "title": "更新間隔*",
+        "options": {
+            "auto": "自動",
+            "1h": "1時間",
+            "3h": "3時間",
+            "6h": "6時間",
+        },
+        "default": "auto",
+    },
+    "map_type": {
+        "icon": "map",
+        "title": "地図の種類",
+        "options": {
+            "standard": "デフォルト",
+            "satellite": "航空写真",
+            "terrain": "地形",
+        },
+        "default": "standard",
+    },
+    "map_zoom": {
+        "icon": "zoom_in",
+        "title": "初期ズーム*",
+        "options": {"8": "8", "10": "10", "12": "12", "14": "14"},
+        "default": "10",
+    },
+    "domestic_locations": {
+        "icon": "flag",
+        "title": "国内射場",
+        "options": {},
+        "default": None,
+        "right_arrow": False,
+        "value": "9ヶ所",
+    },
+    "foreign_locations": {
+        "icon": "public",
+        "title": "国外射場",
+        "options": {},
+        "default": None,
+        "right_arrow": False,
+        "value": "2ヶ所",
+    },
+    "favorites": {
+        "icon": "star",
+        "title": "お気に入り*",
+        "options": {},
+        "default": None,
+        "right_arrow": True,
+        "value": "管理",
+    },
+    "notifications": {
+        "icon": "notifications",
+        "title": "通知*",
+        "options": {"enabled": "有効", "disabled": "無効"},
+        "default": "enabled",
+    },
+    "version": {
+        "icon": "info",
+        "title": "バージョン",
+        "options": {},
+        "default": None,
+        "right_arrow": False,
+        "value": "0.0.1-alpha",
+    },
+}
