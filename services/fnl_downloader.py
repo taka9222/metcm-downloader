@@ -2,75 +2,13 @@ import os
 import asyncio
 from nicegui import ui
 from datetime import date, datetime, timezone
-from pathlib import Path
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, build_opener, urlopen
 
 from services.atmosphere import get_atmospheric_layers
+from services.fnl.client import make_fnl_url, check_exists
+from services.fnl.downloader import download_fnl
 from components.result import _show_atmospheric_layers
 
-FNL_BASE_URL = ("https://osdf-director.osg-htc.org/ncar/gdex/d083002/grib2")
 FNL_HOURS = (0, 6, 12, 18)
-DOWNLOAD_DIR = Path("/tmp/fnl")
-
-
-def debug_log(message: str) -> None: 
-    """Render LogsとブラウザのConsoleの両方へログを出力する.""" 
-    print(message, flush=True) 
-    ui.run_javascript(f"console.log({message!r})")
-
-
-def make_fnl_url(dt: datetime) -> str:
-    """UTC日時からFNL GRIB2のURLを生成する."""
-    dt = dt.astimezone(timezone.utc)
-    return f"{FNL_BASE_URL}/{dt:%Y}/{dt:%Y.%m}/fnl_{dt:%Y%m%d_%H}_00.grib2"
-
-
-def check_exists(url: str) -> bool:
-    """URLのファイルが存在するかHEADで確認する."""
-    try:
-        req = Request(url, method="HEAD")
-        with urlopen(req, timeout=10) as response:
-            return response.status == 200
-    except (HTTPError, URLError, TimeoutError):
-        return False
-
-
-def download_fnl(url: str) -> Path:
-    """FNL GRIB2をダウンロードしてPathを返す."""
-    DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
-    output_path = DOWNLOAD_DIR / os.path.basename(url)
-    temp_path = output_path.with_suffix(".grib2.part")
-
-    if output_path.exists() and output_path.stat().st_size > 0:
-        debug_log(f"Using cached file: {output_path}")
-        return output_path
-
-    temp_path.unlink(missing_ok=True)
-
-    debug_log(f"Downloading: {url}")
-    debug_log(f"Output: {output_path}")
-
-    opener = build_opener()
-
-    try:
-        with opener.open(url, timeout=60) as infile:
-            with temp_path.open("wb") as outfile:
-                while chunk := infile.read(1024 * 1024):
-                    outfile.write(chunk)
-
-        temp_path.replace(output_path)
-
-    except Exception:
-        debug_log(f"Download failed: {type(e).__name__}: {e}")
-        temp_path.unlink(missing_ok=True)
-        raise
-
-    debug_log(f"Download complete: {output_path}") 
-    debug_log(f"File size: {output_path.stat().st_size:,} bytes")
-
-    return output_path
 
 
 def search_by_date(parent_dialog, lat: float, lon: float):
@@ -85,9 +23,7 @@ def search_by_date(parent_dialog, lat: float, lon: float):
 
             ui.label('SELECT DATE').classes('dialog-section-label')
 
-            date_input = ui.date().props(
-                'mask=YYYY-MM-DD'
-            ).classes('w-full')
+            date_input = ui.date().props('mask=YYYY-MM-DD').classes('w-full')
 
             ui.space()
 
@@ -175,7 +111,7 @@ def _find_fnl_files(selected_date: date) -> list[dict]:
 
 
 def _show_fnl_search_results(
-    results: list[dict],
+    results: list[dict],  # list[dataClass]
     selected_date: date,
     lat: float,
     lon: float,
@@ -214,41 +150,29 @@ def _show_fnl_search_results(
 
 
 def _add_fnl_result_row(
-    result: dict,
-    dialog,
-    lat: float,
-    lon: float,
+    result: dict,  # dataClass
+    dialog, lat: float, lon: float,
 ):
-    available = result['exists']
-    dt = result['time']
+    available = result.exists
+    dt = result.time
 
     with ui.row().classes('fnl-result-row'):
-        with ui.column().classes('fnl-result-info'):
-            ui.label(
-                dt.strftime('%H00 UTC')
-            ).classes('fnl-result-time')
 
-            ui.label(
-                result['filename']
-            ).classes('fnl-result-filename')
+        with ui.column().classes('fnl-result-info'):
+
+            ui.label(dt.strftime('%H00 UTC')).classes('fnl-result-time')
+            ui.label(result.filename).classes('fnl-result-filename')
 
         if available:
-            ui.label('AVAILABLE').classes('fnl-available')
 
+            ui.label('AVAILABLE').classes('fnl-available')
             ui.button(
-                'ダウンロード',
-                on_click=lambda r=result: start_download(
-                    r,
-                    dialog,
-                    lat,
-                    lon,
-                ),
+                'ダウンロード', on_click=lambda r=result: start_download(r, dialog, lat, lon)
             ).props('unelevated').classes('dialog-primary-button')
+
         else:
             ui.label('NOT AVAILABLE').classes('fnl-unavailable')
-
-
-import pygrib
+            
 
 async def start_download(result: dict, dialog, lat: float, lon: float):
     dialog.close()
@@ -308,8 +232,8 @@ async def start_download(result: dict, dialog, lat: float, lon: float):
     await asyncio.sleep(0)
 
     try:
-        layers = get_atmospheric_layers(file, lat, lon, maximum_zone=16)
-        # layers = await asyncio.to_thread(get_atmospheric_layers, file, lat, lon, maximum_zone=16)
+        # layers = get_atmospheric_layers(file, lat, lon, maximum_zone=16)
+        layers = await asyncio.to_thread(get_atmospheric_layers, file, lat, lon, maximum_zone=16)
 
     except Exception as e:
         loading_dialog.close()
