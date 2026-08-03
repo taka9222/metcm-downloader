@@ -74,7 +74,7 @@ ATMOSPHERIC_ZONES = [
     AtmosphericZone(6, 2000, 2500, 2250),
     AtmosphericZone(7, 2500, 3000, 2750), 
     AtmosphericZone(8, 3000, 3500, 3250), 
-    AtmosphericZone(9, 3500, 4000, 37500),
+    AtmosphericZone(9, 3500, 4000, 3750),
     AtmosphericZone(10, 4000, 4500, 4250),
     AtmosphericZone(11, 4500, 5000, 4750),
     AtmosphericZone(12, 5000, 6000, 5500), 
