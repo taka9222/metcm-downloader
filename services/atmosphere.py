@@ -65,7 +65,7 @@ ATMOSPHERIC_ZONES_BLAHA2015 = [
 ATMOSPHERIC_ZONES = [
     # ZONE 0 is a point at 0 m. Its value is obtained by vertical
     # extrapolation when the lowest available pressure level is above 0 m.
-    AtmosphericZone(0, 0, 0, 0),
+    # AtmosphericZone(0, 0, 0, 0),
     AtmosphericZone(1, 0, 200, 100), 
     AtmosphericZone(2, 200, 500, 350),
     AtmosphericZone(3, 500, 1000, 750), 
