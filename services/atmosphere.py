@@ -453,19 +453,11 @@ def extract_pressure_levels(
 # ============================================================
 
 def interpolate_vertical(
-    heights: np.ndarray,
-    values: np.ndarray,
-    target_heights: np.ndarray,
-    *,
-    extrapolate: bool = False,
+    heights: np.ndarray, values: np.ndarray, target_heights: np.ndarray,
 ) -> np.ndarray:
     """
     気圧面データを高度方向に線形補間する。
-
-    extrapolate=False:
-        範囲外はNaN。
-    extrapolate=True:
-        範囲外は、最も近い2点を使った線形外挿で推定する。
+    範囲外はNaN。
 
     入力:
         気圧面から得られた高度方向のデータ
@@ -502,27 +494,9 @@ def interpolate_vertical(
     heights, unique_indices = np.unique(heights, return_index=True)
     values = values[unique_indices]
 
-    if heights.size < 2:
-        return np.full(target_heights.shape, np.nan)
-
     result = np.full(target_heights.shape, np.nan)
-
     inside = (target_heights >= heights[0]) & (target_heights <= heights[-1])
     result[inside] = np.interp(target_heights[inside], heights, values)
-
-    if extrapolate:
-        # 下側（今回のZONE 0はこちら）を線形外挿。
-        below = target_heights < heights[0]
-        if np.any(below):
-            slope = (values[1] - values[0]) / (heights[1] - heights[0])
-            result[below] = values[0] + slope * (target_heights[below] - heights[0])
-
-        # 上側も同様に外挿可能にしておく。
-        above = target_heights > heights[-1]
-        if np.any(above):
-            slope = (values[-1] - values[-2]) / (heights[-1] - heights[-2])
-            result[above] = values[-1] + slope * (target_heights[above] - heights[-1])
-
     return result
 
 
@@ -531,21 +505,11 @@ def interpolate_vertical(
 # ============================================================
 
 def layer_mean(
-    heights: np.ndarray,
-    values: np.ndarray,
-    bottom: float,
-    top: float,
-    sample_interval: float = 50.0,
-    *,
-    extrapolate: bool = False,
+    heights: np.ndarray, values: np.ndarray, bottom: float, top: float, sample_interval: float = 50.0,
 ) -> float | None:
     """
     指定高度範囲内を一定間隔でサンプリングし、
     高度方向に線形補間した値の平均を返す。
-
-    bottom == top の場合は、その高度を1点として評価する。
-    extrapolate=True の場合、気圧面データの高度範囲外でも
-    最も近い2点を使って線形外挿する。
 
     入力:
         高度方向データ
@@ -587,23 +551,11 @@ def layer_mean(
             float | None
     """
 
-    if top < bottom:
-        raise ValueError("top must be greater than or equal to bottom")
+    if top <= bottom:
+        raise ValueError("top must be greater than bottom")
 
-    if top == bottom:
-        sample_heights = np.array([bottom], dtype=float)
-    else:
-        sample_heights = np.append(
-            np.arange(bottom, top, sample_interval),
-            top,
-        )
-
-    sampled_values = interpolate_vertical(
-        heights,
-        values,
-        sample_heights,
-        extrapolate=extrapolate,
-    )
+    sample_heights = np.append(np.arange(bottom, top, sample_interval), top)
+    sampled_values = interpolate_vertical(heights, values, sample_heights)
     valid = np.isfinite(sampled_values)
 
     return float(np.mean(sampled_values[valid])) if np.any(valid) else None
@@ -673,24 +625,12 @@ def calculate_layers(
     # }
 
     def mean(values: np.ndarray, zone: AtmosphericZone) -> float | None:
-        # ZONE 0 is exactly 0 m. Since the lowest isobaric surface can be
-        # above 0 m, estimate its value by linear extrapolation.
         return layer_mean(
-            heights,
-            values,
-            zone.bottom,
-            zone.top,
-            sample_interval,
-            extrapolate=(zone.code == 0),
+            heights, values, zone.bottom, zone.top, sample_interval,
         )
 
     layers = []
-    zones = (
-        ATMOSPHERIC_ZONES
-        if maximum_zone is None
-        else [zone for zone in ATMOSPHERIC_ZONES if zone.code <= maximum_zone]
-    )
-    for zone in zones:
+    for zone in ATMOSPHERIC_ZONES[:maximum_zone]:
         density = mean(arrays["density"], zone)
         temperature = mean(arrays["temperature"], zone)
         virtual_temperature = mean(arrays["virtual_temperature"], zone)
@@ -720,18 +660,13 @@ def get_atmospheric_layers(
     grib_path: str | Path, latitude: float, longitude: float, 
     sample_interval: float = 50.0, maximum_zone: int | None = None, neighbor_radius: int = 2,
 ) -> list[dict]:
-    """GRIB2から指定地点の気層の気象データを取得する."""
+    """GRIB2から指定地点の26気層の気象データを取得する."""
 
     latitude = float(np.asarray(latitude).item())
     longitude = float(np.asarray(longitude).item())
 
-    if maximum_zone is not None and not 0 <= maximum_zone <= max(
-        zone.code for zone in ATMOSPHERIC_ZONES
-    ):
-        raise ValueError(
-            f"maximum_zone must be between 0 and "
-            f"{max(zone.code for zone in ATMOSPHERIC_ZONES)}"
-        )
+    if maximum_zone is not None and not 1 <= maximum_zone <= len(ATMOSPHERIC_ZONES):
+        raise ValueError(f"maximum_zone must be between 1 and {len(ATMOSPHERIC_ZONES)}")
 
     grib_data = read_grib(grib_path, latitude, longitude, neighbor_radius)
     pressure_levels = extract_pressure_levels(grib_data, latitude, longitude)
