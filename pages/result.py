@@ -77,8 +77,11 @@ def result_page():
             ui.label("表示形式").classes("result-format-label")
 
             format_select = ui.select(
-                FORMAT_OPTIONS, value="metcm_gsdf",
-            ).props("outlined dense").classes("result-format-select")
+                FORMAT_OPTIONS,
+                value="metcm_gsdf",
+            ).props(
+                "outlined dense behavior=menu"
+            ).classes("result-format-select")
 
         # -------------------------------------------------
         # Table
@@ -124,19 +127,19 @@ def _show_gsdf_table(layers: list[dict]):
         },
         {
             "name": "wind_direction",
-            "label": "風向\n[10 mils]",
+            "label": "風向\n[10mil]",
             "field": "wind_direction",
             "align": "center",
         },
         {
             "name": "wind_speed",
-            "label": "風速\n[0.1 m/sec]",
+            "label": "風速\n[0.1m/s]",
             "field": "wind_speed",
             "align": "center",
         },
         {
             "name": "virtual_temperature",
-            "label": "弾道気温\n[0.1 K]",
+            "label": "弾道気温\n[0.1K]",
             "field": "virtual_temperature",
             "align": "center",
         },
@@ -176,7 +179,7 @@ def _show_stanag_table(layers: list[dict]):
         },
         {
             "name": "wind_direction",
-            "label": "風向\n[10 mils]",
+            "label": "風向\n[10mil]",
             "field": "wind_direction",
             "align": "center",
         },
@@ -188,7 +191,7 @@ def _show_stanag_table(layers: list[dict]):
         },
         {
             "name": "virtual_temperature",
-            "label": "気温\n[0.1 K]",
+            "label": "気温\n[0.1K]",
             "field": "virtual_temperature",
             "align": "center",
         },
@@ -272,13 +275,13 @@ def _show_full_table(layers: list[dict]):
         },
         {
             "name": "wind_speed",
-            "label": "風速\n[m/sec]",
+            "label": "風速\n[m/s]",
             "field": "wind_speed",
             "align": "center",
         },
         {
             "name": "wind_direction",
-            "label": "風向\n[mils]",
+            "label": "風向\n[mil]",
             "field": "wind_direction",
             "align": "center",
         },
