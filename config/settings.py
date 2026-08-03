@@ -1,3 +1,5 @@
+from pages.help import open_help_page
+
 SETTINGS = {
     "appearance": {
         "icon": "dark_mode",
@@ -86,6 +88,14 @@ SETTINGS = {
         "title": "通知*",
         "options": {"enabled": "有効", "disabled": "無効"},
         "default": "enabled",
+    },
+    "help": {
+        "icon": "help_outline",
+        "title": "操作のヒント",
+        "options": {},
+        "default": None,
+        "right_arrow": True,
+        "on_change": open_help_page,
     },
     "version": {
         "icon": "info",

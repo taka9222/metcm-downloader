@@ -7,6 +7,7 @@ from pages.locations import locations_page
 from pages.locations_map import map_page
 from pages.result import result_page
 from pages.settings import get_setting, set_setting, get_setting_label
+from pages.help import help_page
 from components.page_header import page_header
 from components.navbar import floating_nav
 from config.colors import UI_COLORS
@@ -20,13 +21,18 @@ from utils.build_info import get_build_number
 
 
 def apply_setting(key: str, value: str):
-    handler_name = SETTINGS[key].get("on_change")
+    is_selectable = len(SETTINGS[key].get("options", {})) > 0
+    handler = SETTINGS[key].get("on_change")
 
-    if handler_name:
-        handler = globals().get(handler_name)
+    if handler is None:
+        return 
 
-        if handler:
-            handler(value)
+    if isinstance(handler, str):
+        handler = globals().get(handler)
+    if is_selectable:
+        handler(value)
+    else:
+        handler()
 
 # =========================================================
 # Setting Dialog
@@ -130,7 +136,10 @@ def settings_table(keys):
     # Row click
     def handle_row_click(e):
         key = e.args["key"]
-        open_setting_dialog(key, on_changed=refresh)
+        if e.args["value"] == "" and e.args["right_arrow"]:
+            apply_setting(key, None)
+        else:
+            open_setting_dialog(key, on_changed=refresh)
 
     table.on("row-click", handle_row_click)
 
@@ -160,7 +169,7 @@ def settings_page():
         settings_section(
             "LOCATIONS", "演習場", ["domestic_locations", "foreign_locations", "favorites"],
         )
-        settings_section("APP", "アプリ", ["notifications", "version"])
+        settings_section("APP", "アプリ", ["notifications", "help", "version"])
 
         # Floating Navigation と重ならないように
         ui.element("div").style("height: calc(110px + env(safe-area-inset-bottom));")
@@ -231,6 +240,7 @@ ui.sub_pages({
     "/map/{lat}/{lon}": themed_page(map_page),
     "/result": themed_page(result_page),
     "/settings": themed_page(settings_page),
+    "/help": themed_page(help_page),
 }).classes("w-full")
 
 port = int(os.environ.get("PORT", 8080))
