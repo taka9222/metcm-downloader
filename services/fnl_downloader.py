@@ -1,5 +1,5 @@
 import asyncio
-from nicegui import ui
+from nicegui import app, ui
 from datetime import date
 
 from services.atmosphere import get_atmospheric_layers
@@ -190,4 +190,14 @@ async def start_download(result: dict, dialog, lat: float, lon: float):  # resul
 
     loading_dialog.close()
 
-    _show_atmospheric_layers(layers, result, lat, lon)
+    app.storage.tab["atmospheric_result"] = {
+        "layers": layers,
+        "source": {
+            "time": result.time,
+            "filename": result.filename,
+        },
+        "lat": lat,
+        "lon": lon,
+    }
+
+    ui.navigate.to("/result")

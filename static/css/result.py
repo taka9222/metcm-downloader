@@ -2,20 +2,26 @@ def css_result():
     return """
 
 /* =========================================================
-   Atmospheric Profile Dialog
+   Atmospheric Profile Result Page
    ========================================================= */
 
-.atmosphere-dialog {
-    width: min(1100px, calc(100vw - 32px));
-    max-width: 1100px;
-    max-height: calc(100vh - 48px);
-    padding: 32px 36px 28px;
-    border: 1px solid rgba(30, 45, 60, 0.16);
-    border-radius: 22px;
+.result-page {
+    width: 100%;
+}
+
+/* ---------------------------------------------------------
+   Result information
+   --------------------------------------------------------- */
+
+.result-info-card {
+    width: 100%;
+    padding: 28px 32px 24px;
+    border: 1px solid rgba(30, 45, 60, 0.12);
+    border-radius: 18px;
     background: rgba(255, 255, 255, 0.97);
     box-shadow:
-        0 20px 60px rgba(20, 30, 40, 0.16),
-        0 4px 16px rgba(20, 30, 40, 0.06);
+        0 12px 36px rgba(20, 30, 40, 0.10),
+        0 3px 12px rgba(20, 30, 40, 0.04);
 }
 
 .atmosphere-meta {
@@ -30,30 +36,100 @@ def css_result():
     letter-spacing: 0.04em;
 }
 
+
+/* ---------------------------------------------------------
+   Display format
+   --------------------------------------------------------- */
+
+.result-format-row {
+    width: 100%;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.result-format-label {
+    color: #7d8992;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.result-format-select {
+    min-width: 180px;
+}
+
+
+/* ---------------------------------------------------------
+   Atmospheric table
+   --------------------------------------------------------- */
+
+.result-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
 .atmosphere-table {
     width: 100%;
+    min-width: max-content;
     margin-top: 18px;
+
     border: 1px solid rgba(30, 45, 60, 0.12);
     border-radius: 12px;
     overflow: hidden;
+
+    /* Quasar の影を無効化 */
+    box-shadow: none !important;
+
+    /* 背景を明示 */
+    background: #ffffff;
 }
+
+.atmosphere-table .q-table__container {
+    border-radius: inherit;
+    box-shadow: none !important;
+    background: #ffffff;
+}
+
+.atmosphere-table .q-table__middle {
+    border-radius: inherit;
+}
+
+.atmosphere-table .q-table {
+    width: 100%;
+    box-shadow: none !important;
+}
+
+
+/* Header */
 
 .atmosphere-table thead tr {
     background: rgba(240, 243, 246, 0.9);
 }
 
 .atmosphere-table th {
+    height: 52px;
+
     color: #7d8992 !important;
     font-size: 10px !important;
     font-weight: 800 !important;
     letter-spacing: 0.08em;
-    white-space: nowrap;
+
+    /* \n の位置で必ず改行 */
+    white-space: pre-line !important;
+    line-height: 1.25 !important;
+
+    vertical-align: middle;
 }
+
+/* Body */
 
 .atmosphere-table td {
     color: #263746 !important;
     font-size: 12px !important;
     font-variant-numeric: tabular-nums;
+
     white-space: nowrap;
 }
 
@@ -63,6 +139,31 @@ def css_result():
 
 .atmosphere-table tbody tr:hover {
     background: rgba(20, 125, 209, 0.04);
+}
+
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 700px) {
+
+    .result-info-card {
+        padding: 22px 20px 20px;
+    }
+
+    .result-format-row {
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .result-format-select {
+        min-width: 160px;
+    }
+
+    .atmosphere-table {
+        margin-top: 14px;
+    }
 }
 
 """

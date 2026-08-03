@@ -31,20 +31,72 @@ class AtmosphericZone:
     height: float
 
 
+# METCM → METEO-11 conversion based on Blaha & Šilinger (2015)
+ATMOSPHERIC_ZONES_BLAHA2015 = [
+    AtmosphericZone(1, 0, 200, 100), 
+    AtmosphericZone(2, 200, 500, 350),
+    AtmosphericZone(3, 500, 1000, 750), 
+    AtmosphericZone(4, 1000, 1500, 1250),
+    AtmosphericZone(5, 1500, 2000, 1750), 
+    AtmosphericZone(6, 2000, 3000, 2500),
+    AtmosphericZone(7, 3000, 4000, 3500), 
+    AtmosphericZone(8, 4000, 5000, 4500),
+    AtmosphericZone(9, 5000, 6000, 5500), 
+    AtmosphericZone(10, 6000, 8000, 7000),
+    AtmosphericZone(11, 8000, 10000, 9000),
+    AtmosphericZone(12, 10000, 12000, 11000),
+    AtmosphericZone(13, 12000, 14000, 13000),
+    AtmosphericZone(14, 14000, 16000, 15000),
+    AtmosphericZone(15, 16000, 18000, 17000),
+    AtmosphericZone(16, 18000, 20000, 19000),
+    AtmosphericZone(17, 20000, 22000, 21000), 
+    AtmosphericZone(18, 22000, 24000, 23000),
+    AtmosphericZone(19, 24000, 26000, 25000), 
+    AtmosphericZone(20, 26000, 28000, 27000),
+    AtmosphericZone(21, 28000, 30000, 29000), 
+    AtmosphericZone(22, 30000, 32000, 31000),
+    AtmosphericZone(23, 32000, 34000, 33000), 
+    AtmosphericZone(24, 34000, 36000, 35000),
+    AtmosphericZone(25, 36000, 38000, 37000), 
+    AtmosphericZone(26, 38000, 40000, 39000),
+]
+
+
 ATMOSPHERIC_ZONES = [
-    AtmosphericZone(1, 0, 200, 100), AtmosphericZone(2, 200, 500, 350),
-    AtmosphericZone(3, 500, 1000, 750), AtmosphericZone(4, 1000, 1500, 1250),
-    AtmosphericZone(5, 1500, 2000, 1750), AtmosphericZone(6, 2000, 3000, 2500),
-    AtmosphericZone(7, 3000, 4000, 3500), AtmosphericZone(8, 4000, 5000, 4500),
-    AtmosphericZone(9, 5000, 6000, 5500), AtmosphericZone(10, 6000, 8000, 7000),
-    AtmosphericZone(11, 8000, 10000, 9000), AtmosphericZone(12, 10000, 12000, 11000),
-    AtmosphericZone(13, 12000, 14000, 13000), AtmosphericZone(14, 14000, 16000, 15000),
-    AtmosphericZone(15, 16000, 18000, 17000), AtmosphericZone(16, 18000, 20000, 19000),
-    AtmosphericZone(17, 20000, 22000, 21000), AtmosphericZone(18, 22000, 24000, 23000),
-    AtmosphericZone(19, 24000, 26000, 25000), AtmosphericZone(20, 26000, 28000, 27000),
-    AtmosphericZone(21, 28000, 30000, 29000), AtmosphericZone(22, 30000, 32000, 31000),
-    AtmosphericZone(23, 32000, 34000, 33000), AtmosphericZone(24, 34000, 36000, 35000),
-    AtmosphericZone(25, 36000, 38000, 37000), AtmosphericZone(26, 38000, 40000, 39000),
+    # ZONE 0 is a point at 0 m. Its value is obtained by vertical
+    # extrapolation when the lowest available pressure level is above 0 m.
+    AtmosphericZone(0, 0, 0, 0),
+    AtmosphericZone(1, 0, 200, 100), 
+    AtmosphericZone(2, 200, 500, 350),
+    AtmosphericZone(3, 500, 1000, 750), 
+    AtmosphericZone(4, 1000, 1500, 1250),
+    AtmosphericZone(5, 1500, 2000, 1750), 
+    AtmosphericZone(6, 2000, 2500, 2250),
+    AtmosphericZone(7, 2500, 3000, 2750), 
+    AtmosphericZone(8, 3000, 3500, 3250), 
+    AtmosphericZone(9, 3500, 4000, 37500),
+    AtmosphericZone(10, 4000, 4500, 4250),
+    AtmosphericZone(11, 4500, 5000, 4750),
+    AtmosphericZone(12, 5000, 6000, 5500), 
+    AtmosphericZone(13, 6000, 7000, 6500),
+    AtmosphericZone(14, 7000, 8000, 7500),
+    AtmosphericZone(15, 8000, 9000, 8500),
+    AtmosphericZone(16, 9000, 10000, 9500),
+    AtmosphericZone(17, 10000, 11000, 10500),
+    AtmosphericZone(18, 11000, 12000, 11500),
+    AtmosphericZone(19, 12000, 13000, 12500),
+    AtmosphericZone(20, 13000, 14000, 13500),
+    AtmosphericZone(21, 14000, 15000, 14500),
+    AtmosphericZone(22, 15000, 16000, 15500),
+    AtmosphericZone(23, 16000, 17000, 16500),
+    AtmosphericZone(24, 17000, 18000, 17500),
+    AtmosphericZone(25, 18000, 19000, 18500),
+    AtmosphericZone(26, 19000, 20000, 19500),
+    AtmosphericZone(27, 20000, 22000, 21000),
+    AtmosphericZone(28, 22000, 24000, 23000),
+    AtmosphericZone(29, 24000, 26000, 25000), 
+    AtmosphericZone(30, 26000, 28000, 27000),
+    AtmosphericZone(31, 28000, 30000, 29000), 
 ]
 
 
@@ -401,11 +453,19 @@ def extract_pressure_levels(
 # ============================================================
 
 def interpolate_vertical(
-    heights: np.ndarray, values: np.ndarray, target_heights: np.ndarray,
+    heights: np.ndarray,
+    values: np.ndarray,
+    target_heights: np.ndarray,
+    *,
+    extrapolate: bool = False,
 ) -> np.ndarray:
     """
     気圧面データを高度方向に線形補間する。
-    範囲外はNaN。
+
+    extrapolate=False:
+        範囲外はNaN。
+    extrapolate=True:
+        範囲外は、最も近い2点を使った線形外挿で推定する。
 
     入力:
         気圧面から得られた高度方向のデータ
@@ -442,9 +502,27 @@ def interpolate_vertical(
     heights, unique_indices = np.unique(heights, return_index=True)
     values = values[unique_indices]
 
+    if heights.size < 2:
+        return np.full(target_heights.shape, np.nan)
+
     result = np.full(target_heights.shape, np.nan)
+
     inside = (target_heights >= heights[0]) & (target_heights <= heights[-1])
     result[inside] = np.interp(target_heights[inside], heights, values)
+
+    if extrapolate:
+        # 下側（今回のZONE 0はこちら）を線形外挿。
+        below = target_heights < heights[0]
+        if np.any(below):
+            slope = (values[1] - values[0]) / (heights[1] - heights[0])
+            result[below] = values[0] + slope * (target_heights[below] - heights[0])
+
+        # 上側も同様に外挿可能にしておく。
+        above = target_heights > heights[-1]
+        if np.any(above):
+            slope = (values[-1] - values[-2]) / (heights[-1] - heights[-2])
+            result[above] = values[-1] + slope * (target_heights[above] - heights[-1])
+
     return result
 
 
@@ -453,11 +531,21 @@ def interpolate_vertical(
 # ============================================================
 
 def layer_mean(
-    heights: np.ndarray, values: np.ndarray, bottom: float, top: float, sample_interval: float = 50.0,
+    heights: np.ndarray,
+    values: np.ndarray,
+    bottom: float,
+    top: float,
+    sample_interval: float = 50.0,
+    *,
+    extrapolate: bool = False,
 ) -> float | None:
     """
     指定高度範囲内を一定間隔でサンプリングし、
     高度方向に線形補間した値の平均を返す。
+
+    bottom == top の場合は、その高度を1点として評価する。
+    extrapolate=True の場合、気圧面データの高度範囲外でも
+    最も近い2点を使って線形外挿する。
 
     入力:
         高度方向データ
@@ -499,11 +587,23 @@ def layer_mean(
             float | None
     """
 
-    if top <= bottom:
-        raise ValueError("top must be greater than bottom")
+    if top < bottom:
+        raise ValueError("top must be greater than or equal to bottom")
 
-    sample_heights = np.append(np.arange(bottom, top, sample_interval), top)
-    sampled_values = interpolate_vertical(heights, values, sample_heights)
+    if top == bottom:
+        sample_heights = np.array([bottom], dtype=float)
+    else:
+        sample_heights = np.append(
+            np.arange(bottom, top, sample_interval),
+            top,
+        )
+
+    sampled_values = interpolate_vertical(
+        heights,
+        values,
+        sample_heights,
+        extrapolate=extrapolate,
+    )
     valid = np.isfinite(sampled_values)
 
     return float(np.mean(sampled_values[valid])) if np.any(valid) else None
@@ -573,12 +673,24 @@ def calculate_layers(
     # }
 
     def mean(values: np.ndarray, zone: AtmosphericZone) -> float | None:
+        # ZONE 0 is exactly 0 m. Since the lowest isobaric surface can be
+        # above 0 m, estimate its value by linear extrapolation.
         return layer_mean(
-            heights, values, zone.bottom, zone.top, sample_interval,
+            heights,
+            values,
+            zone.bottom,
+            zone.top,
+            sample_interval,
+            extrapolate=(zone.code == 0),
         )
 
     layers = []
-    for zone in ATMOSPHERIC_ZONES[:maximum_zone]:
+    zones = (
+        ATMOSPHERIC_ZONES
+        if maximum_zone is None
+        else [zone for zone in ATMOSPHERIC_ZONES if zone.code <= maximum_zone]
+    )
+    for zone in zones:
         density = mean(arrays["density"], zone)
         temperature = mean(arrays["temperature"], zone)
         virtual_temperature = mean(arrays["virtual_temperature"], zone)
@@ -608,13 +720,18 @@ def get_atmospheric_layers(
     grib_path: str | Path, latitude: float, longitude: float, 
     sample_interval: float = 50.0, maximum_zone: int | None = None, neighbor_radius: int = 2,
 ) -> list[dict]:
-    """GRIB2から指定地点の26気層の気象データを取得する."""
+    """GRIB2から指定地点の気層の気象データを取得する."""
 
     latitude = float(np.asarray(latitude).item())
     longitude = float(np.asarray(longitude).item())
 
-    if maximum_zone is not None and not 1 <= maximum_zone <= len(ATMOSPHERIC_ZONES):
-        raise ValueError(f"maximum_zone must be between 1 and {len(ATMOSPHERIC_ZONES)}")
+    if maximum_zone is not None and not 0 <= maximum_zone <= max(
+        zone.code for zone in ATMOSPHERIC_ZONES
+    ):
+        raise ValueError(
+            f"maximum_zone must be between 0 and "
+            f"{max(zone.code for zone in ATMOSPHERIC_ZONES)}"
+        )
 
     grib_data = read_grib(grib_path, latitude, longitude, neighbor_radius)
     pressure_levels = extract_pressure_levels(grib_data, latitude, longitude)

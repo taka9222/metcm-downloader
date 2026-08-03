@@ -5,6 +5,7 @@ from static.head import add_head
 from pages.home import home_page
 from pages.locations import locations_page
 from pages.locations_map import map_page
+from pages.result import result_page
 from pages.settings import get_setting, set_setting, get_setting_label
 from components.page_header import page_header
 from components.navbar import floating_nav
@@ -221,6 +222,7 @@ ui.sub_pages({
     "/": home_page,
     "/locations": locations_page,
     "/map/{lat}/{lon}": map_page,
+    "/result": result_page,
     "/settings": settings_page,
 }).classes("w-full")
 

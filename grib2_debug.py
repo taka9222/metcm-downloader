@@ -49,7 +49,8 @@ def interpolate_grib(grb, lat: float, lon: float) -> dict:
 
 grbs = pygrib.open("./fnl_20260731_00_00.grib2")
 for idx, grb in enumerate(grbs):
-    print (idx, grb.name, grb.shortName, grb.typeOfLevel, grb.level)
+    if grb.typeOfLevel == "surface":
+        print (idx, grb.name, grb.shortName, grb.typeOfLevel, grb.level)
 grb = grbs(name="Temperature")[0]
 
 for k in grb.keys():
