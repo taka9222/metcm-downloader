@@ -18,31 +18,37 @@ def result_page():
 
     result = app.storage.tab.get("atmospheric_result")
 
-    ui.button(
-        "戻る",
-        icon="arrow_back",
-        on_click=ui.navigate.back,
-    ).props("flat no-caps")
-
-    if not result:
-        with ui.column().classes("page-content"):
-            page_header("RESULT", "解析結果")
-
-            ui.label("表示できる解析結果がありません。")
-            ui.button("ホームへ戻る", on_click=lambda: ui.navigate.to("/table"),
-            ).props("unelevated no-caps")
-
-        floating_nav("home")
-        return
-
-    layers = result["layers"]
-    source = result["source"]
-    lat = result["lat"]
-    lon = result["lon"]
-
     with ui.column().classes("page-content result-page"):
 
+        # -------------------------------------------------
+        # Back
+        # -------------------------------------------------
+
+        ui.button(
+            "選択画面に戻る", icon="arrow_back", on_click=ui.navigate.back,
+        ).props("flat no-caps").classes("result-back-button")
+
+        # -------------------------------------------------
+        # Header
+        # -------------------------------------------------
+
         page_header("RESULT", "気象解析結果")
+
+        if not result:
+            ui.label(
+                "表示できる解析結果がありません。"
+            ).classes("result-empty-message")
+
+            ui.button(
+                "選択画面に戻る", on_click=lambda: ui.navigate.back,
+            ).props("unelevated no-caps")
+
+            return
+
+        layers = result["layers"]
+        source = result["source"]
+        lat = result["lat"]
+        lon = result["lon"]
 
         # -------------------------------------------------
         # Metadata
@@ -50,28 +56,17 @@ def result_page():
 
         with ui.card().classes("result-info-card"):
 
-            ui.label("ATMOSPHERIC PROFILE").classes(
-                "dialog-eyebrow"
-            )
-
-            ui.label("大気層気象データ").classes(
-                "dialog-title"
-            )
+            ui.label("ATMOSPHERIC PROFILE").classes("dialog-eyebrow")
+            ui.label("大気層気象データ").classes("dialog-title")
 
             ui.separator().classes("dialog-separator")
 
             with ui.row().classes("atmosphere-meta"):
-                ui.label(
-                    f"LAT {lat:.4f}"
-                ).classes("atmosphere-location")
 
-                ui.label(
-                    f"LON {lon:.4f}"
-                ).classes("atmosphere-location")
+                ui.label(f"LAT {lat:.4f}").classes("atmosphere-location")
+                ui.label(f"LON {lon:.4f}").classes("atmosphere-location")
 
-            ui.label(
-                source["time"].strftime("%Y年 %m月 %d日 %H00 UTC")
-            ).classes("dialog-age")
+            ui.label(source["time"].strftime("%Y年 %m月 %d日 %H00 UTC")).classes("dialog-age")
 
         # -------------------------------------------------
         # Format selector
@@ -79,24 +74,17 @@ def result_page():
 
         with ui.row().classes("result-format-row"):
 
-            ui.label("表示形式").classes(
-                "result-format-label"
-            )
+            ui.label("表示形式").classes("result-format-label")
 
             format_select = ui.select(
-                FORMAT_OPTIONS,
-                value="metcm_gsdf",
-            ).props(
-                "outlined dense"
-            ).classes("result-format-select")
+                FORMAT_OPTIONS, value="metcm_gsdf",
+            ).props("outlined dense").classes("result-format-select")
 
         # -------------------------------------------------
         # Table
         # -------------------------------------------------
 
-        table_container = ui.column().classes(
-            "w-full result-table-container"
-        )
+        table_container = ui.column().classes("w-full result-table-container")
 
         def update_table():
             table_container.clear()
@@ -104,8 +92,10 @@ def result_page():
             with table_container:
                 if format_select.value == "metcm_gsdf":
                     _show_gsdf_table(layers)
+
                 elif format_select.value == "metcm_stanag":
                     _show_stanag_table(layers)
+
                 elif format_select.value == "full_content":
                     _show_full_table(layers)
 
@@ -119,9 +109,7 @@ def result_page():
         # Footer
         # -------------------------------------------------
 
-        ui.element("div").style(
-            "height: calc(110px + env(safe-area-inset-bottom));"
-        )
+        ui.element("div").style("height: calc(110px + env(safe-area-inset-bottom));")
 
 
 def _show_gsdf_table(layers: list[dict]):

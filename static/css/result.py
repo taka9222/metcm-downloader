@@ -9,6 +9,7 @@ def css_result():
     width: 100%;
 }
 
+
 /* ---------------------------------------------------------
    Result information
    --------------------------------------------------------- */
@@ -16,18 +17,35 @@ def css_result():
 .result-info-card {
     width: 100%;
     padding: 28px 32px 24px;
+
     border: 1px solid rgba(30, 45, 60, 0.12);
     border-radius: 18px;
+
     background: rgba(255, 255, 255, 0.97);
+
     box-shadow:
         0 12px 36px rgba(20, 30, 40, 0.10),
         0 3px 12px rgba(20, 30, 40, 0.04);
 }
 
+
+/* Dark mode */
+.body--dark .result-info-card {
+    border-color: rgba(255, 255, 255, 0.10);
+
+    background: rgba(30, 34, 39, 0.96);
+
+    box-shadow:
+        0 12px 36px rgba(0, 0, 0, 0.28),
+        0 3px 12px rgba(0, 0, 0, 0.18);
+}
+
+
 .atmosphere-meta {
     gap: 24px;
     margin-bottom: 2px;
 }
+
 
 .atmosphere-location {
     color: #008c9a;
@@ -49,12 +67,19 @@ def css_result():
     margin-top: 24px;
 }
 
+
 .result-format-label {
     color: #7d8992;
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.08em;
 }
+
+
+.body--dark .result-format-label {
+    color: #9ba5ad;
+}
+
 
 .result-format-select {
     min-width: 180px;
@@ -70,6 +95,7 @@ def css_result():
     overflow-x: auto;
 }
 
+
 .atmosphere-table {
     width: 100%;
     min-width: max-content;
@@ -82,9 +108,16 @@ def css_result():
     /* Quasar の影を無効化 */
     box-shadow: none !important;
 
-    /* 背景を明示 */
     background: #ffffff;
 }
+
+
+/* Dark mode */
+.body--dark .atmosphere-table {
+    border-color: rgba(255, 255, 255, 0.10);
+    background: #1e2227;
+}
+
 
 .atmosphere-table .q-table__container {
     border-radius: inherit;
@@ -92,9 +125,16 @@ def css_result():
     background: #ffffff;
 }
 
+
+.body--dark .atmosphere-table .q-table__container {
+    background: #1e2227;
+}
+
+
 .atmosphere-table .q-table__middle {
     border-radius: inherit;
 }
+
 
 .atmosphere-table .q-table {
     width: 100%;
@@ -102,11 +142,19 @@ def css_result():
 }
 
 
-/* Header */
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
 
 .atmosphere-table thead tr {
     background: rgba(240, 243, 246, 0.9);
 }
+
+
+.body--dark .atmosphere-table thead tr {
+    background: rgba(255, 255, 255, 0.055);
+}
+
 
 .atmosphere-table th {
     height: 52px;
@@ -123,7 +171,15 @@ def css_result():
     vertical-align: middle;
 }
 
-/* Body */
+
+.body--dark .atmosphere-table th {
+    color: #9ba5ad !important;
+}
+
+
+/* ---------------------------------------------------------
+   Body
+   --------------------------------------------------------- */
 
 .atmosphere-table td {
     color: #263746 !important;
@@ -133,12 +189,29 @@ def css_result():
     white-space: nowrap;
 }
 
+
+.body--dark .atmosphere-table td {
+    color: #d7dde2 !important;
+}
+
+
 .atmosphere-table tbody tr {
     border-bottom: 1px solid rgba(30, 45, 60, 0.08);
 }
 
+
+.body--dark .atmosphere-table tbody tr {
+    border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+
+
 .atmosphere-table tbody tr:hover {
     background: rgba(20, 125, 209, 0.04);
+}
+
+
+.body--dark .atmosphere-table tbody tr:hover {
+    background: rgba(80, 170, 230, 0.08);
 }
 
 
@@ -152,14 +225,17 @@ def css_result():
         padding: 22px 20px 20px;
     }
 
+
     .result-format-row {
         justify-content: space-between;
         align-items: center;
     }
 
+
     .result-format-select {
         min-width: 160px;
     }
+
 
     .atmosphere-table {
         margin-top: 14px;

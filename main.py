@@ -182,12 +182,12 @@ BODY_CLASSES = [
     "theme-olive-dark",
 ]
 
-dark = ui.dark_mode()
 
 def apply_appearance(value: str):
     # bodyクラスをリセット
-    ui.query("body").classes(remove=" ".join(BODY_CLASSES))
     ui.colors(**UI_COLORS[value])
+    dark = ui.dark_mode()
+    ui.query("body").classes(remove=" ".join(BODY_CLASSES))
 
     match value:
         case "system":
@@ -210,8 +210,15 @@ def apply_appearance(value: str):
             dark.enable()
             ui.query("body").classes(add="theme-olive-dark")
 
-theme = app.storage.user.get("appearance", "system")
-apply_appearance(theme)
+
+def themed_page(page):
+    def wrapper():
+        theme = app.storage.user.get("appearance", "system")
+        apply_appearance(theme)
+        page()
+
+    return wrapper
+
 
 # PWA化
 app.add_static_files("/static", "static")
@@ -219,11 +226,11 @@ app.add_static_files("/static", "static")
 add_head()
 
 ui.sub_pages({
-    "/": home_page,
-    "/locations": locations_page,
-    "/map/{lat}/{lon}": map_page,
-    "/result": result_page,
-    "/settings": settings_page,
+    "/": themed_page(home_page),
+    "/locations": themed_page(locations_page),
+    "/map/{lat}/{lon}": themed_page(map_page),
+    "/result": themed_page(result_page),
+    "/settings": themed_page(settings_page),
 }).classes("w-full")
 
 port = int(os.environ.get("PORT", 8080))
