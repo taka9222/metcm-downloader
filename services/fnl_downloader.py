@@ -5,7 +5,6 @@ from datetime import date
 from services.atmosphere import get_atmospheric_layers
 from services.fnl.downloader import download_fnl
 from services.fnl.search import find_fnl_files
-from components.result import _show_atmospheric_layers
 from pages.settings import get_setting
 
 FNL_HOURS = (0, 6, 12, 18)
@@ -184,8 +183,17 @@ async def start_download(result: dict, dialog, lat: float, lon: float):  # resul
         layers = await asyncio.to_thread(get_atmospheric_layers, file, lat, lon, maximum_zone=maximum_zone)
 
     except Exception as e:
+        # 解析に失敗した場合はダウンロード済みファイルを削除
+        try:
+            file.unlink(missing_ok=True)
+        except Exception:
+            pass
+
         loading_dialog.close()
-        ui.notify(f'気象データの解析に失敗しました: {file}, {e}', color='negative', position="top")
+        ui.notify(
+            f"気象データの解析に失敗しました: {file}, {e}", 
+            color="negative", position="top"
+        )
         return
 
     loading_dialog.close()
