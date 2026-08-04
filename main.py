@@ -1,4 +1,5 @@
 from nicegui import app, ui
+from functools import wraps
 import os
 
 from static.head import add_head
@@ -221,10 +222,11 @@ def apply_appearance(value: str):
 
 
 def themed_page(page):
-    def wrapper():
+    @wraps(page)
+    def wrapper(*args, **kwargs):
         theme = app.storage.user.get("appearance", "system")
         apply_appearance(theme)
-        page()
+        return page(*args, **kwargs)
 
     return wrapper
 

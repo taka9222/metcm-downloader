@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from nicegui import app, ui
+import json
 
-from components.navbar import floating_nav
 from components.page_header import page_header
 
 
@@ -16,7 +16,10 @@ FORMAT_OPTIONS = {
 def result_page():
     """解析結果を表示するページ。"""
 
-    result = app.storage.tab.get("atmospheric_result")
+    result = None
+
+    if ui.context.client is not None:
+        result = app.storage.tab.get("atmospheric_result")
 
     with ui.column().classes("page-content result-page"):
 
@@ -115,6 +118,41 @@ def result_page():
         ui.element("div").style("height: calc(110px + env(safe-area-inset-bottom));")
 
 
+def rows_to_clipboard_text(
+    rows: list[dict[str, str]],
+    n_col: int | None = None,
+) -> str:
+    """表のrowsをクリップボード用の固定幅テキストに変換する。
+
+    Args:
+        rows: 各行をdictで表したデータ。
+        n_col: 指定した場合、この文字数ごとにスペースで区切る。
+
+    Returns:
+        改行区切りのテキスト。
+    """
+    lines = []
+
+    for row in rows:
+        text = "".join(row.values())
+
+        if n_col is not None:
+            text = " ".join(
+                text[i:i + n_col]
+                for i in range(0, len(text), n_col)
+            )
+
+        lines.append(text)
+
+    return "\n".join(lines)
+
+
+async def clipboard_text(roews, n_col: int | None = None):
+    clipboard_text = rows_to_clipboard_text(roews, n_col=n_col)
+    await ui.run_javascript(f'navigator.clipboard.writeText({json.dumps(clipboard_text)})')
+    ui.notify('気象データをクリップボードにコピーしました', type='positive', position='top')
+
+
 def _show_gsdf_table(layers: list[dict]):
     """自衛隊形式の大気層表を表示する。"""
 
@@ -163,6 +201,11 @@ def _show_gsdf_table(layers: list[dict]):
                 "density": f'{round(layer['density']):04d}',
             }
         )
+
+    ui.button(
+        'クリップボードにコピー', icon='content_copy',
+        on_click=lambda: clipboard_text(rows, n_col=8),
+    ).props('outline').classes('dialog-copy-button')
 
     ui.table(columns=columns, rows=rows, row_key="zone").classes("atmosphere-table")
 
@@ -217,6 +260,11 @@ def _show_stanag_table(layers: list[dict]):
                 "pressure": f'{round(layer["pressure"]):04d}',
             }
         )
+
+    ui.button(
+        'クリップボードにコピー', icon='content_copy',
+        on_click=lambda: clipboard_text(rows, n_col=8),
+    ).props('outline').classes('dialog-copy-button')
 
     ui.table(columns=columns, rows=rows, row_key="zone").classes("atmosphere-table")
 
@@ -310,4 +358,45 @@ def _show_full_table(layers: list[dict]):
         for layer in layers
     ]
 
-    ui.table(columns=columns, rows=rows, row_key="zone").classes("atmosphere-table")
+    with ui.column().classes("w-full"):
+
+        table_id = f"atmosphere-table-{id(layers)}"
+
+        ui.button(
+            "クリップボードにコピー",
+            icon="content_copy",
+        ).props("outline").classes("dialog-copy-button").on(
+            "click",
+            js_handler=f"""
+            async () => {{
+                const root = document.getElementById({table_id!r});
+                const table = root?.querySelector('table');
+
+                if (!table) {{
+                    console.error("table element not found");
+                    return;
+                }}
+
+                try {{
+                    await navigator.clipboard.write([
+                        new ClipboardItem({{
+                            "text/html": new Blob(
+                                [table.outerHTML],
+                                {{ type: "text/html" }}
+                            ),
+                            "text/plain": new Blob(
+                                [table.innerText],
+                                {{ type: "text/plain" }}
+                            ),
+                        }})
+                    ]);
+                }} catch (error) {{
+                    console.error("Clipboard error:", error);
+                }}
+            }}
+            """,
+        )
+
+        ui.table(
+            columns=columns, rows=rows, row_key="zone"
+        ).props(f'id="{table_id}"').classes("atmosphere-table")
