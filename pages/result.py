@@ -148,9 +148,13 @@ def rows_to_clipboard_text(
 
 
 async def clipboard_text(roews, n_col: int | None = None):
-    clipboard_text = rows_to_clipboard_text(roews, n_col=n_col)
-    await ui.run_javascript(f'navigator.clipboard.writeText({json.dumps(clipboard_text)})')
-    ui.notify('気象データをクリップボードにコピーしました', type='positive', position='top')
+    try:
+        clipboard_text = rows_to_clipboard_text(roews, n_col=n_col)
+        await ui.run_javascript(f'navigator.clipboard.writeText({json.dumps(clipboard_text)})')
+        ui.notify('気象データをクリップボードにコピーしました', type='positive', position='top')
+    except:
+        ui.notify(clipboard_text[:10], type='negative', position='top')
+        ui.notify('クリップボードへのコピーに失敗しました', type='negative', position='top')
 
 
 def _show_gsdf_table(layers: list[dict]):
