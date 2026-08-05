@@ -67,7 +67,7 @@ async def _search_fnl_date(
             ).classes('dialog-age')
 
     loading_dialog.open()
-    await asyncio.sleep(0)
+    # await asyncio.sleep(0)
 
     try:
         results = await asyncio.to_thread( find_fnl_files, selected_date)
@@ -90,28 +90,18 @@ def _show_fnl_search_results(
             ui.label('取得可能なデータ').classes('dialog-title')
             ui.separator().classes('dialog-separator')
 
-            ui.label(
-                selected_date.strftime('%Y年 %m月 %d日')
-            ).classes('dialog-time')
+            ui.label(selected_date.strftime('%Y年 %m月 %d日')).classes('dialog-time')
 
             ui.label('UTC').classes('dialog-age')
 
             with ui.column().classes('fnl-results'):
                 for result in results:
-                    _add_fnl_result_row(
-                        result,
-                        dialog,
-                        lat,
-                        lon,
-                    )
+                    _add_fnl_result_row(result, dialog, lat, lon)
 
             ui.space()
 
             with ui.row().classes('dialog-actions'):
-                ui.button(
-                    '閉じる',
-                    on_click=dialog.close,
-                ).props('flat').classes('dialog-cancel-button')
+                ui.button('閉じる', on_click=dialog.close).props('flat').classes('dialog-cancel-button')
 
     dialog.open()
 
@@ -136,7 +126,7 @@ def _add_fnl_result_row(
 
         else:
             ui.label('NOT AVAILABLE').classes('fnl-unavailable')
-
+            
 
 async def start_download(result: dict, dialog, lat: float, lon: float):  # result:dataClass
     dialog.close()
@@ -151,7 +141,7 @@ async def start_download(result: dict, dialog, lat: float, lon: float):  # resul
             ui.label('FNL GRIB2データをダウンロードしています').classes('dialog-age')
 
     loading_dialog.open()
-    await asyncio.sleep(0)
+    # await asyncio.sleep(0)
 
     try:
         file = await asyncio.to_thread(download_fnl, result.url)
@@ -190,10 +180,7 @@ async def start_download(result: dict, dialog, lat: float, lon: float):  # resul
             pass
 
         loading_dialog.close()
-        ui.notify(
-            f"気象データの解析に失敗しました: {file}, {e}", 
-            color="negative", position="top"
-        )
+        ui.notify(f"気象データの解析に失敗しました: {file}, {e}", color="negative", position="top")
         return
 
     loading_dialog.close()

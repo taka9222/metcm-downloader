@@ -15,6 +15,20 @@ from config.colors import UI_COLORS
 from config.settings import SETTINGS
 from utils.build_info import get_build_number
 
+# _original_run_javascript = ui.run_javascript
+
+
+# def debug_run_javascript(*args, **kwargs):
+#     print("=== ui.run_javascript called ===")
+#     print(args)
+#     print(kwargs)
+#     import traceback
+#     traceback.print_stack()
+#     return _original_run_javascript(*args, **kwargs)
+
+
+# ui.run_javascript = debug_run_javascript
+
 
 # =========================================================
 # Storage

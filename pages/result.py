@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from nicegui import app, ui
 import json
+import asyncio
 
 
 from components.page_header import page_header
@@ -14,13 +15,13 @@ FORMAT_OPTIONS = {
 }
 
 
-def result_page():
+async def result_page():
     """解析結果を表示するページ。"""
 
-    result = None
+    await ui.context.client.connected()
+    await asyncio.sleep(0.5)
 
-    if ui.context.client is not None:
-        result = app.storage.tab.get("atmospheric_result")
+    result = app.storage.tab.get("atmospheric_result")
 
     with ui.column().classes("page-content result-page"):
 
