@@ -6,20 +6,48 @@ def css_dialog():
    ========================================================= */
 
 .weather-dialog {
-    width: 560px;
+    width: 520px;
     max-width: calc(100vw - 32px);
-    min-height: 360px;
+    min-height: 0;
 
-    padding: 32px 36px 28px;
+    padding: 24px 28px 22px;
 
     border: 1px solid rgba(30, 45, 60, 0.16);
-    border-radius: 22px;
+    border-radius: 18px;
 
     background: rgba(255, 255, 255, 0.97);
 
     box-shadow:
-        0 20px 60px rgba(20, 30, 40, 0.16),
-        0 4px 16px rgba(20, 30, 40, 0.06);
+        0 18px 50px rgba(20, 30, 40, 0.15),
+        0 3px 12px rgba(20, 30, 40, 0.06);
+}
+
+
+/* =========================================================
+   Dialog positioning
+   Floating navigation bar を考慮
+   ========================================================= */
+
+/*
+ * floating-nav:
+ *   height: 68px
+ *   bottom: 14px + safe-area
+ *
+ * さらに 16px の余白を確保する。
+ *
+ * これによりダイアログの中央位置を、
+ * 画面全体ではなく「ナビを除いた領域」の中央にする。
+ */
+
+.q-dialog__inner {
+    padding-top: 0;
+    padding-bottom:
+        calc(
+            68px
+            + 14px
+            + env(safe-area-inset-bottom)
+            + 16px
+        );
 }
 
 
@@ -33,8 +61,8 @@ def css_dialog():
     background: rgba(30, 34, 39, 0.97);
 
     box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.42),
-        0 4px 16px rgba(0, 0, 0, 0.24);
+        0 18px 50px rgba(0, 0, 0, 0.40),
+        0 3px 12px rgba(0, 0, 0, 0.22);
 }
 
 
@@ -43,14 +71,14 @@ def css_dialog():
    --------------------------------------------------------- */
 
 .dialog-eyebrow {
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 
     color: #8b969f;
 
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
 
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
 }
 
 .body--dark .dialog-eyebrow {
@@ -61,11 +89,11 @@ def css_dialog():
 .dialog-title {
     color: #182635;
 
-    font-size: 28px;
+    font-size: 25px;
     font-weight: 800;
 
-    line-height: 1.3;
-    letter-spacing: -0.03em;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
 }
 
 .body--dark .dialog-title {
@@ -74,7 +102,7 @@ def css_dialog():
 
 
 .dialog-separator {
-    margin: 12px 0 28px;
+    margin: 9px 0 20px;
 
     background: rgba(30, 45, 60, 0.14);
 }
@@ -89,19 +117,19 @@ def css_dialog():
    --------------------------------------------------------- */
 
 .dialog-info {
-    gap: 8px;
+    gap: 5px;
 }
 
 
 .dialog-section-label {
-    margin-bottom: 2px;
+    margin-bottom: 1px;
 
     color: #8b969f;
 
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
 
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
 }
 
 .body--dark .dialog-section-label {
@@ -112,10 +140,10 @@ def css_dialog():
 .dialog-time {
     color: #172738;
 
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
 
-    line-height: 1.4;
+    line-height: 1.35;
 }
 
 .body--dark .dialog-time {
@@ -126,7 +154,7 @@ def css_dialog():
 .dialog-age {
     color: #008c9a;
 
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
 }
 
@@ -142,14 +170,14 @@ def css_dialog():
 .dialog-file-row {
     width: 100%;
 
-    margin-top: 18px;
-    padding: 13px 16px;
+    margin-top: 14px;
+    padding: 10px 13px;
 
-    gap: 10px;
+    gap: 8px;
     align-items: center;
 
     border: 1px solid rgba(30, 45, 60, 0.10);
-    border-radius: 10px;
+    border-radius: 9px;
 
     background: rgba(245, 247, 249, 0.8);
 }
@@ -164,7 +192,7 @@ def css_dialog():
 .dialog-file-icon {
     color: #8c99a3;
 
-    font-size: 19px;
+    font-size: 17px;
 }
 
 .body--dark .dialog-file-icon {
@@ -178,7 +206,7 @@ def css_dialog():
     color: #687681;
 
     font-family: monospace;
-    font-size: 12px;
+    font-size: 11px;
 
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -196,10 +224,12 @@ def css_dialog():
 .dialog-actions {
     width: 100%;
 
+    margin-top: 2px;
+
     justify-content: flex-end;
     align-items: center;
 
-    gap: 6px;
+    gap: 4px;
 
     flex-wrap: wrap;
 }
@@ -207,12 +237,13 @@ def css_dialog():
 
 .dialog-button,
 .dialog-cancel-button {
-    min-height: 42px;
+    min-height: 38px;
 
-    border-radius: 10px;
+    border-radius: 9px;
 
     color: #43515d;
 
+    font-size: 13px;
     font-weight: 600;
 }
 
@@ -223,16 +254,17 @@ def css_dialog():
 
 
 .dialog-primary-button {
-    min-height: 42px;
+    min-height: 38px;
 
-    padding: 0 18px;
+    padding: 0 16px;
 
-    border-radius: 10px;
+    border-radius: 9px;
 
     background: #147bd1 !important;
 
     color: white !important;
 
+    font-size: 13px;
     font-weight: 700;
 }
 
@@ -252,23 +284,37 @@ def css_dialog():
 
 @media (max-width: 600px) {
 
+    .q-dialog__inner {
+        padding-left: 12px;
+        padding-right: 12px;
+
+        padding-bottom:
+            calc(
+                68px
+                + 14px
+                + env(safe-area-inset-bottom)
+                + 14px
+            );
+    }
+
+
     .weather-dialog {
-        width: calc(100vw - 24px);
+        width: 100%;
         max-width: none;
 
-        padding: 26px 22px 22px;
+        padding: 21px 20px 18px;
 
-        border-radius: 18px;
+        border-radius: 16px;
     }
 
 
     .dialog-title {
-        font-size: 24px;
+        font-size: 22px;
     }
 
 
     .dialog-separator {
-        margin: 10px 0 24px;
+        margin: 8px 0 18px;
     }
 
 
@@ -280,7 +326,32 @@ def css_dialog():
     .dialog-primary-button,
     .dialog-cancel-button,
     .dialog-button {
-        min-height: 40px;
+        min-height: 38px;
+    }
+}
+
+
+/* =========================================================
+   Very short screens
+   ========================================================= */
+
+@media (max-height: 600px) {
+
+    .weather-dialog {
+        padding-top: 18px;
+        padding-bottom: 16px;
+    }
+
+
+    .dialog-separator {
+        margin-bottom: 14px;
+    }
+
+
+    .dialog-file-row {
+        margin-top: 10px;
+        padding-top: 8px;
+        padding-bottom: 8px;
     }
 }
 

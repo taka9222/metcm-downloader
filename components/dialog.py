@@ -12,33 +12,6 @@ def hours_ago(t: datetime) -> float:
     return (datetime.now(timezone.utc) - t).total_seconds() / 3600
 
 
-async def dialog_latest_weather_old(lat: float, lon: float):
-    loading = ui.dialog().props(
-        'transition-show="fade" '
-        'transition-hide="fade"'
-    )
-
-    with loading:
-        with ui.card().classes('loading-card'):
-            with ui.column().classes('items-center w-full'):
-                ui.spinner(size='42px', color='primary')
-                ui.label('最新データを検索しています').classes('loading-message')
-
-    loading.open()
-    await asyncio.sleep(0)
-    try:
-        result = await asyncio.to_thread(
-            get_latest_fnl
-        )
-    except Exception as e:
-        ui.notify(f'検索エラー: {e}', color='negative')
-        result = None
-    finally:
-        loading.close()
-
-    _dialog_result(result)
-
-
 async def dialog_latest_weather(lat: float, lon: float):
     with ui.dialog() as loading_dialog:
         with ui.card().classes('weather-dialog'):
@@ -48,24 +21,21 @@ async def dialog_latest_weather(lat: float, lon: float):
             ui.spinner('dots').classes('text-primary')
 
     loading_dialog.open()
-    await asyncio.sleep(0)
+    # await asyncio.sleep(0)
 
     try:
         result = await asyncio.to_thread(get_latest_fnl)
 
     except Exception as e:
         loading_dialog.close()
-        ui.notify(
-            f'気象データの取得に失敗しました: {e}',
-            color='negative',
-        )
+        ui.notify(f'気象データの取得に失敗しました: {e}', color='negative', position='top')
         traceback.print_exc()
         return
 
     loading_dialog.close()
 
     if result is None:
-        ui.notify('最新のFNLデータが見つかりません', color='negative')
+        ui.notify('最新のFNLデータが見つかりません', color='negative', position='top')
         return
 
     _dialog_result(result, lat, lon)
