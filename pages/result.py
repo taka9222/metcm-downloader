@@ -3,6 +3,7 @@ from __future__ import annotations
 from nicegui import app, ui
 import json
 
+
 from components.page_header import page_header
 
 
@@ -149,11 +150,10 @@ def rows_to_clipboard_text(
 
 async def clipboard_text(roews, n_col: int | None = None):
     try:
-        clipboard_text = rows_to_clipboard_text(roews, n_col=n_col)
-        await ui.run_javascript(f'navigator.clipboard.writeText({json.dumps(clipboard_text)})')
-        ui.notify('気象データをクリップボードにコピーしました', type='positive', position='top')
+        text = rows_to_clipboard_text(roews, n_col=n_col)
+        await ui.run_javascript(f'navigator.clipboard.writeText({json.dumps(text)})')
+        ui.notify('クリップボードにコピーしました', type='positive', position='top')
     except:
-        ui.notify(clipboard_text[:10], type='negative', position='top')
         ui.notify('クリップボードへのコピーに失敗しました', type='negative', position='top')
 
 

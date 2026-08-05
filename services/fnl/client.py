@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+import time
 
 
 FNL_BASE_URL = (
@@ -23,13 +24,22 @@ def make_fnl_url(dt: datetime) -> str:
     )
 
 
-def check_exists(url: str) -> bool:
-    """URLのファイルが存在するかHEADで確認する."""
-    try:
-        request = Request(url, method="HEAD")
+def check_exists(url: str, timeout: float = 3, retries: int = 2) -> bool:
+    """ファイルの存在確認（本体は取得しない）"""
+    for attempt in range(retries + 1):
+        try:
+            req = Request(url, method="HEAD")
+            with urlopen(req, timeout=timeout) as response:
+                return response.status == 200
 
-        with urlopen(request, timeout=10) as response:
-            return response.status == 200
+        except HTTPError as e:
+            if e.code == 404:
+                return False
 
-    except (HTTPError, URLError, TimeoutError):
-        return False
+        except (URLError, TimeoutError):
+            pass
+
+        if attempt < retries:
+            time.sleep(0.2)
+
+    return False

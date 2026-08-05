@@ -279,7 +279,7 @@ def _read_grib(path: str, lat: float, lon: float, neighbor_radius: int) -> dict:
     return data
 
 
-@lru_cache(maxsize=2)
+@lru_cache(maxsize=3)
 def _read_grib_cached(path: str, mtime_ns: int, lat: float, lon: float, neighbor_radius: int) -> dict:
     """同じGRIB・地点・近傍サイズなら読み込み結果を再利用する."""
     return _read_grib(path, lat, lon, neighbor_radius)

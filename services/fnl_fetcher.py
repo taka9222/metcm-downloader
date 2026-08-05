@@ -4,34 +4,12 @@ from urllib.error import HTTPError, URLError
 import time
 
 from .fnl.search import FNLFile
+from .fnl.client import check_exists
 
 
 BASE_URL = (
     "https://osdf-director.osg-htc.org/ncar/gdex/d083002/grib2/"
 )
-
-
-def check_exists(url: str, timeout: float = 1.0, retries: int = 3) -> bool:
-    """ファイルの存在確認（本体は取得しない）"""
-    for attempt in range(retries + 1):
-        try:
-            req = Request(url, method="HEAD")
-            with urlopen(req, timeout=timeout) as response:
-                return response.status == 200
-
-        except HTTPError as e:
-            print(e.code, url)
-            # 404などはリトライせず「存在しない」と判定
-            if e.code == 404:
-                return False
-
-        except (URLError, TimeoutError):
-            pass
-
-        if attempt < retries:
-            time.sleep(0.2)
-
-    return False
 
 
 def generate_fnl_url(dt):
