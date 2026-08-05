@@ -15,39 +15,11 @@ def css_dialog():
     border: 1px solid rgba(30, 45, 60, 0.16);
     border-radius: 18px;
 
-    background: rgba(255, 255, 255, 0.97);
+    background: rgba(255, 255, 255, 1.);
 
     box-shadow:
         0 18px 50px rgba(20, 30, 40, 0.15),
         0 3px 12px rgba(20, 30, 40, 0.06);
-}
-
-
-/* =========================================================
-   Dialog positioning
-   Floating navigation bar を考慮
-   ========================================================= */
-
-/*
- * floating-nav:
- *   height: 68px
- *   bottom: 14px + safe-area
- *
- * さらに 16px の余白を確保する。
- *
- * これによりダイアログの中央位置を、
- * 画面全体ではなく「ナビを除いた領域」の中央にする。
- */
-
-.q-dialog__inner {
-    padding-top: 0;
-    padding-bottom:
-        calc(
-            68px
-            + 14px
-            + env(safe-area-inset-bottom)
-            + 16px
-        );
 }
 
 
@@ -58,7 +30,7 @@ def css_dialog():
 .body--dark .weather-dialog {
     border-color: rgba(255, 255, 255, 0.10);
 
-    background: rgba(30, 34, 39, 0.97);
+    background: rgba(30, 34, 39, 1.);
 
     box-shadow:
         0 18px 50px rgba(0, 0, 0, 0.40),

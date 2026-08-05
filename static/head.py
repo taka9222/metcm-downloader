@@ -84,6 +84,35 @@ def css_common():
 
     box-sizing: border-box;
 }
+
+/* =========================================================
+   Dialog positioning
+   Floating navigation bar を考慮
+   ========================================================= */
+
+/*
+ * floating-nav:
+ *   height: 68px
+ *   bottom: 14px + safe-area
+ *
+ * さらに 16px の余白を確保する。
+ *
+ * これによりダイアログの中央位置を、
+ * 画面全体ではなく「ナビを除いた領域」の中央にする。
+ */
+
+.q-dialog__inner {
+    padding-top: 0;
+    padding-bottom:
+        calc(
+            68px
+            + 14px
+            + env(safe-area-inset-bottom)
+            + 16px
+        );
+
+}
+
     """
 
 

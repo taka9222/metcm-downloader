@@ -357,7 +357,7 @@ def css_settings():
     }
 
     .settings-table-value {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     .settings-table-arrow {

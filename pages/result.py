@@ -61,7 +61,6 @@ async def result_page():
 
         with ui.card().classes("result-info-card"):
 
-            ui.label("ATMOSPHERIC PROFILE").classes("dialog-eyebrow")
             ui.label("大気層気象データ").classes("dialog-title")
 
             ui.separator().classes("dialog-separator")
@@ -182,7 +181,7 @@ def _show_gsdf_table(layers: list[dict]):
         },
         {
             "name": "virtual_temperature",
-            "label": "弾道気温\n[0.1K]",
+            "label": "気温\n[0.1K]",
             "field": "virtual_temperature",
             "align": "center",
         },
@@ -272,6 +271,8 @@ def _show_stanag_table(layers: list[dict]):
     ).props('outline').classes('dialog-copy-button')
 
     ui.table(columns=columns, rows=rows, row_key="zone").classes("atmosphere-table")
+
+
 
 
 def _show_full_table(layers: list[dict]):
