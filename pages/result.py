@@ -135,9 +135,11 @@ def rows_to_clipboard_text(
     lines = []
 
     for row in rows:
-        text = "".join(row.values())
+        if n_col is None:
+            text = " ".join(row.values())
 
-        if n_col is not None:
+        else:
+            text = "".join(row.values())
             text = " ".join(
                 text[i:i + n_col]
                 for i in range(0, len(text), n_col)
@@ -208,7 +210,7 @@ def _show_gsdf_table(layers: list[dict]):
 
     ui.button(
         'クリップボードにコピー', icon='content_copy',
-        on_click=lambda: clipboard_text(rows, n_col=8),
+        on_click=lambda: clipboard_text(rows),
     ).props('outline').classes('dialog-copy-button')
 
     ui.table(columns=columns, rows=rows, row_key="zone").classes("atmosphere-table")
@@ -267,7 +269,7 @@ def _show_stanag_table(layers: list[dict]):
 
     ui.button(
         'クリップボードにコピー', icon='content_copy',
-        on_click=lambda: clipboard_text(rows, n_col=8),
+        on_click=lambda: clipboard_text(rows),
     ).props('outline').classes('dialog-copy-button')
 
     ui.table(columns=columns, rows=rows, row_key="zone").classes("atmosphere-table")

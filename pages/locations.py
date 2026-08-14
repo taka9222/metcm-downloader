@@ -3,38 +3,30 @@ from nicegui import ui
 from components.page_header import page_header
 from components.dialog import dialog_latest_weather
 from components.navbar import floating_nav
+from config.locations import get_ranges
 
 
 def locations_page():
     with ui.column().classes("page-content"):
         page_header("LOCATIONS", "演習場一覧")
 
-        domestic_rows = [
-            {"code": "Y", "loc": "矢臼別演習場", "lat": 43.2997, "lon": 144.9873},
-            {"code": "K", "loc": "上富良野演習場", "lat": 43.4230, "lon": 142.4800},
-            {"code": "I", "loc": "岩手山演習場", "lat": 39.8650, "lon": 140.9730},
-            {"code": "O", "loc": "王城寺原演習場", "lat": 38.5710, "lon": 140.8610},
-            {"code": "E", "loc": "東富士演習場", "lat": 35.2947, "lon": 138.8536},
-            {"code": "N", "loc": "北富士演習場", "lat": 35.4500, "lon": 138.8000},
-            {"code": "A", "loc": "饗庭野演習場", "lat": 35.3460, "lon": 136.0390},
-            {"code": "H", "loc": "日出生台演習場", "lat": 33.2860, "lon": 131.3990},
-            {"code": "S", "loc": "防衛装備庁下北試験場", "lat": 41.3050, "lon": 141.3070},
+        sections = [
+            ("DOMESTIC", "国内射場", "domestic"),
+            ("OVERSEAS", "国外射場", "overseas"),
         ]
 
-        overseas_rows = [
-            {"code": "YPG", "loc": "Yuma Proving Ground", "country": "USA", "lat": 32.8600, "lon": -114.4000},
-            {"code": "KOF", "loc": "Kofa Range", "country": "USA", "lat": 33.0000, "lon": -114.0000},
-        ]
+        for title, subtitle, category in sections:
+            rows = [
+                location.to_row()
+                for location in get_ranges(category)
+            ]
 
-        for title, subtitle, rows in [
-            ("DOMESTIC", "国内射場", domestic_rows),
-            ("OVERSEAS", "国外射場", overseas_rows),
-        ]:
             with ui.column().classes("range-section"):
                 with ui.row().classes("range-section-title"):
                     ui.label(title)
                     ui.label(subtitle)
-                create_range_table(rows)
+
+                create_range_table(rows, overseas=category=="overseas")
 
     floating_nav("table")
 
@@ -57,14 +49,22 @@ def create_range_table(rows, overseas=False):
 
     table.on("row-click", row_clicked)
 
-    with table.add_slot("body-cell-loc", r'''
+    country_html = """
+        <div v-if="props.row.country" class="range-country">
+            {{ props.row.country }}
+        </div>
+    """ if overseas else ""
+
+    with table.add_slot("body-cell-loc", rf'''
         <q-td :props="props" class="range-table-location">
             <div class="range-row-content">
-                <div class="range-name">{{ props.row.loc }}</div>
-                <div v-if="props.row.country" class="range-country">{{ props.row.country }}</div>
+                <div class="range-name">{{{{ props.row.loc }}}}</div>
+
+                {country_html}
+
                 <div class="range-coordinates">
-                    <span>北緯 {{ props.row.lat.toFixed(4) }}</span>
-                    <span>東経 {{ props.row.lon.toFixed(4) }}</span>
+                    <span>北緯 {{{{ props.row.lat.toFixed(4) }}}}</span>
+                    <span>東経 {{{{ props.row.lon.toFixed(4) }}}}</span>
                 </div>
             </div>
         </q-td>
