@@ -112,7 +112,7 @@ RANGES: list[RangeLocation] = [
     ),
     RangeLocation(
         code="YPG-K",
-        name="Yuma Proving Ground - KOFA Range",
+        name="ユマ試験場 - KOFA射場",
         category="overseas",
         country="USA",
         region="Arizona",
@@ -121,7 +121,7 @@ RANGES: list[RangeLocation] = [
     ),
     RangeLocation(
         code="YPG-C",
-        name="Yuma Proving Ground - Cibola Range",
+        name="ユマ試験場 - Cibola射場",
         category="overseas",
         country="USA",
         region="Arizona",
@@ -130,7 +130,7 @@ RANGES: list[RangeLocation] = [
     ),
     RangeLocation(
         code="DPG",
-        name="Dugway Proving Ground",
+        name="ダグウェイ実験場",
         category="overseas",
         country="USA",
         region="Utah",
@@ -139,7 +139,7 @@ RANGES: list[RangeLocation] = [
     ),
     RangeLocation(
         code="APG",
-        name="Aberdeen Proving Ground",
+        name="アバディーン性能試験場",
         category="overseas",
         country="USA",
         region="Maryland",
