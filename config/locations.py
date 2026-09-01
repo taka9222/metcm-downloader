@@ -128,6 +128,24 @@ RANGES: list[RangeLocation] = [
         lat=33.333164,
         lon=-114.377756,
     ),
+    RangeLocation(
+        code="DPG",
+        name="Dugway Proving Ground",
+        category="overseas",
+        country="USA",
+        region="Utah",
+        lat=40.254479, 
+        lon=-113.289904,
+    ),
+    RangeLocation(
+        code="APG",
+        name="Aberdeen Proving Ground",
+        category="overseas",
+        country="USA",
+        region="Maryland",
+        lat=39.458664,
+        lon=-76.132484,
+    ),
 ]
 
 
