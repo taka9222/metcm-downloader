@@ -11,7 +11,7 @@ def settings_page():
         page_header("SETTINGS", "設定")
         ui.label("*は現在未実装")
         settings_section("GENERAL", "一般", ["appearance", "unit"])
-        settings_section("WEATHER", "気象情報", ["weather_source", "maximum_zone", "weather_update"])
+        settings_section("WEATHER", "気象情報", ["weather_source", "maximum_zone"])
         settings_section("MAP", "地図", ["map_type", "map_zoom"])
         settings_section("LOCATIONS", "演習場", ["domestic_locations", "foreign_locations", "favorites"])
         settings_section("APP", "アプリ", ["notifications", "help", "version"])

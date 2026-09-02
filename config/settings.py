@@ -34,17 +34,6 @@ SETTINGS = {
         "options": {"8": "8", "12": "12", "16": "16", "20": "20", "26": "26", "31": "31"},
         "default": "16",
     },
-    "weather_update": {
-        "icon": "update",
-        "title": "更新間隔*",
-        "options": {
-            "auto": "自動",
-            "1h": "1時間",
-            "3h": "3時間",
-            "6h": "6時間",
-        },
-        "default": "auto",
-    },
     "map_type": {
         "icon": "map",
         "title": "地図の種類",
@@ -57,8 +46,8 @@ SETTINGS = {
     },
     "map_zoom": {
         "icon": "zoom_in",
-        "title": "初期ズーム*",
-        "options": {"8": "8", "10": "10", "12": "12", "14": "14"},
+        "title": "初期ズーム",
+        "options": {"6": "6", "10": "10", "14": "14", "18": "18"},
         "default": "10",
     },
     "domestic_locations": {

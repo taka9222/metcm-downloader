@@ -16,7 +16,7 @@ def set_map_type(map_element, map_type: str):
 def map_page(lat: float, lon: float):
     with ui.element("div").classes("map-page"):
 
-        map_element = ui.leaflet(center=(lat, lon), zoom=10).classes("map-view")
+        map_element = ui.leaflet(center=(lat, lon), zoom=get_setting("map_zoom")).classes("map-view")
         set_map_type(map_element, get_setting("map_type"))
 
         # Floating Back Button
