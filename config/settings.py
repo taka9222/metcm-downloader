@@ -1,4 +1,6 @@
+from components.appearance import change_appearance
 from pages.help import open_help_page
+
 
 SETTINGS = {
     "appearance": {
@@ -12,7 +14,7 @@ SETTINGS = {
             "olive_dark": "オリーブドラブ (濃)"
         },
         "default": "system",
-        "on_change": "apply_appearance",
+        "on_change": change_appearance,
     },
     "unit": {
         "icon": "straighten",

@@ -9,18 +9,6 @@ def css_home_dashboard():
     gap: 0 !important;
 }
 
-.home-prototype-note {
-    margin-top: 4px;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    color: rgba(70, 80, 90, 0.42);
-}
-
-.body--dark .home-prototype-note {
-    color: rgba(210, 220, 228, 0.35);
-}
-
-
 /* =========================================================
    Dashboard Section Header
    ========================================================= */

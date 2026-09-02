@@ -1,16 +1,8 @@
-from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from pathlib import Path
 
 from .client import FNL_HOURS, check_exists, make_fnl_url
-
-
-@dataclass(frozen=True)
-class FNLFile:
-    time: datetime
-    url: str
-    filename: str
-    exists: bool
+from .data import FNLFile
 
 
 def find_fnl_files(selected_date: date) -> list[FNLFile]:

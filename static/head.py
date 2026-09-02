@@ -1,6 +1,7 @@
 from nicegui import ui   
 
 from static.css.page_header import css_page_header
+from static.css.announcements import css_announcements
 from static.css.home_dashboard import css_home_dashboard
 from static.css.hero_card import css_hero_card
 from static.css.table import css_table
@@ -23,6 +24,7 @@ def add_css():
         <style>
         {css_common()}
         {css_page_header()}
+        {css_announcements()}
         {css_home_dashboard()}
         {css_hero_card()}
         {css_table()}

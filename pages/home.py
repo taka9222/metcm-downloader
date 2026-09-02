@@ -3,12 +3,13 @@ from nicegui import ui
 from components.page_header import page_header
 from components.dialog import dialog_latest_weather
 from components.navbar import floating_nav
+from components.announcements import announcement_card
 
 
 def home_page():
     with ui.column().classes("page-content home-page"):
         page_header("OVERVIEW", "ホーム")
-        ui.label("PROTOTYPE UI: overall layout may be altered").classes("home-prototype-note")
+        announcement_card()
 
         section_header("RECENT LOCATIONS", "直近に使用した演習場")
         location_card(eyebrow="YAUSUBETSU TRAINING AREA", title="矢臼別演習場", region="北海道",

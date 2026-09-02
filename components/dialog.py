@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import asyncio
 import traceback
 
-from services.fnl_fetcher import get_latest_fnl
+from services.fnl.client import get_latest_fnl
 from services.fnl_downloader import start_download, search_by_date
 
 
