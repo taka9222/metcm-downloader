@@ -1,5 +1,5 @@
 from nicegui import ui
-from pages.settings import get_setting
+from pages.settings_page import get_setting
 from config.map_tiles import MAP_TILES
 
 

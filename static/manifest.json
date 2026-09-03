@@ -1,20 +1,28 @@
 {
   "name": "陸上自衛隊 気象報ダウンローダー",
   "short_name": "気象報",
-  "start_url": "/",
+  "start_url": "/home",
   "display": "standalone",
   "background_color": "#101010",
   "theme_color": "#1976d2",
   "icons": [
     {
-      "src": "/static/icon-192.png",
+      "src": "/static/icon-maskable-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
-      "src": "/static/icon-512.png",
+      "src": "/static/icon-maskable-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/static/icon-maskable-512x512.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

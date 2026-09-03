@@ -1,5 +1,5 @@
 from components.appearance import change_appearance
-from pages.help import open_help_page
+from pages.help_page import open_help_page
 
 
 SETTINGS = {

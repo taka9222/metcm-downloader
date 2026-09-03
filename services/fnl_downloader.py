@@ -5,7 +5,7 @@ from datetime import date
 from services.atmosphere import get_atmospheric_layers
 from services.fnl.downloader import download_fnl
 from services.fnl.search import find_fnl_files
-from pages.settings import get_setting
+from pages.settings_page import get_setting
 
 FNL_HOURS = (0, 6, 12, 18)
 

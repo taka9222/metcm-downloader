@@ -3,7 +3,7 @@ from nicegui import ui
 
 def floating_nav(current: str):
     tabs = [
-        ("home", "ホーム", "/", "home"),
+        ("home", "ホーム", "/home", "home"),
         ("map", "演習場一覧", "/locations", "table"),
         ("settings", "設定", "/settings", "settings"),
     ]
